@@ -1,0 +1,5 @@
+
+<?php \Laravel\Section::start('content'); ?>
+	<?php echo  $content ; ?>
+<?php \Laravel\Section::stop(); ?>
+<?php echo view('docs::template')->with(get_defined_vars())->render(); ?>

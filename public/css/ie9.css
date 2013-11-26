@@ -1,0 +1,8 @@
+.list-comment-counters-inner span { line-height:6px; font-size:22px;
+	padding-top:9px;
+}
+.list-comment-count-bg {
+	padding-bottom:5px;
+}
+list-comment-follow{ height:25px;}
+.list-comment-counts-follow span{ padding-top:6px; line-height:11px !important; }

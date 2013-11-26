@@ -1,0 +1,22 @@
+.browse-section{ position:absolute; right:0px; top:25px;}
+.what-your-hobby input[type="text"]{ float:left; }
+.what-your-hobby.after-search{ height:40px;}
+.after-search .icon-globe{ top:10px;}
+.after-search .icon-caret-down{ top:10px;}
+.after-search .icon-search{ top:10px;}
+.green .icon-circle-arrow-right{ top:5px;}
+.what-your-hobby input.after-input[type="text"]{ width:178px;}.green{ width:103px;}
+.after-login-pic-border{ background:none; }
+.btn.activity-btn{ width:120px;}
+.btn.ac-oth{ width:165px;}
+.btn.ac-new{ width:263px;}
+.after-login-pic{ background:none;}
+.mr-top {
+    margin-top: 0px;
+}.what-your-hobby input[type="text"].after-input{ width:150px;}
+.invited-pic{ background:none;border: 1px dashed #BBBBBB;
+    border-radius: 4px 4px 4px 4px; }
+	
+	.activity-details{ top:0px;}
+	
+	tr.common-row { border-bottom:1px solid #000 !important; }

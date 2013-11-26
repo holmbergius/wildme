@@ -1,0 +1,15 @@
+.nav ul li.last a {
+	padding:15px 12px 12px;
+	border-right: 1px solid #5ca5fc;
+	border-left: 1px solid #0062d6;
+}
+.btn.serach-btn {
+	height:20px;
+	padding: 5px 11px 17px;
+}
+.listing {
+	width:267px !important;
+}
+.dropdown-menu {
+	z-index:9 !important;
+}
