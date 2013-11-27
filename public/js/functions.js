@@ -268,6 +268,8 @@ function getRecentEncounters(page)
 						 if(val.media_count >0)
 						 {
 							 
+							 //jholmber Nov27, 2013 - block right-click download of images
+							 $('body').on('contextmenu', 'img', function(e){ return false; });
 						
 							 mediaDetail	+=	"<div class='pics-videos group'><ul>";
 							 
@@ -280,6 +282,8 @@ function getRecentEncounters(page)
 								popUpImages	+=	"<li><img src='"+media_val.image_name+"' /></li>";
 								
 								mediaDetail	+=	"<li onclick='popupById("+val.id+", "+media_index+");' id='imgLi"+val.id+media_index+"'><img src='"+canvas_url+media_val.thumb_path+"' onerror=\"$('#imgLi"+val.id+media_index+"').hide();\" style='width:120px; height:80px' /></li>";
+								
+					
 								
 							 });
 							 
@@ -313,7 +317,7 @@ function getRecentEncounters(page)
 						 
 						 
 						 
-						 popUp = "<div class='popup-inner pic-poup' id='pop_"+val.id+"' style='display:none;position:absolute;left:80%;top:-1%'><div class='popup-inner-content' style='position:relative;'><h3><a href='"+canvas_url+"profile/"+animalId+"'>"+nickName+"   ("+animalId+")</a> at "+verbatimLocality+"<span class='hide-pic-poup'><i class='icon-remove'></i></span></h3><div class='slider-image scrollable1' id='scrollable"+val.id+"'><ul class='items'>"+popUpImages+"</ul> </div> <div class='slider-pic-left-arrow prev'><i class='icon-angle-left'></i></div> <div class='slider-pic-right-arrow next'><i class='icon-angle-right' ></i></div> </div> </div>";
+						 popUp = "<div class='popup-inner pic-poup' id='pop_"+val.id+"' style='display:none;position:absolute;left:80%;top:-1%'><div class='popup-inner-content' style='position:relative;'><h3><a href='"+canvas_url+"profile/"+animalId+"'>"+nickName+"   ("+animalId+")</a> at "+verbatimLocality+"<span class='hide-pic-poup'><i class='icon-remove'></i></span></h3><div class='slider-image scrollable1' id='scrollable"+val.id+"'><ul class='items'>"+popUpImages+"</ul> </div> <div class='slider-pic-left-arrow prev'><i class='icon-angle-left'></i></div> <div class='slider-pic-right-arrow next'><i class='icon-angle-right' ></i></div><h3>All images are copyrighted by their respective contributors.</h3></div> </div>";
 						 // image onclick='window.location = \""+canvas_url+"profile/"+animalId+"\"'
 						 CreateList	+=	"<li id='enc_"+val.id+"'>";
 						 CreateList += popUp;
@@ -350,7 +354,7 @@ function getRecentEncounters(page)
 				 {
 					 $('#spinner-act').hide();
 					 $("#loadmore").hide();
-					var norecord	=	"<li  style='font: 14px latolight,Arial;text-align:center; '>No Activites Found....</li>"
+					var norecord	=	"<li  style='font: 14px latolight,Arial;text-align:center; '>No Activities Found....</li>"
 					 $('#listActivites').html(norecord)
 				 }
 				 
