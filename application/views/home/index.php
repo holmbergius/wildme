@@ -124,7 +124,7 @@ Follow individual animals under study by researchers and learn more about their 
         <div class="slider-text">
           <h1 style="display:none">Follow your favorite whale sharks, <br />
             polar bears, giant manta rays and more.</h1>
-          <p style="display:none">We’ve tagged thousands of wildlife animals around the world. Befriend them to find out what they’re doing, where and with whom. As they cover the expanse of the Sahara, or wade into the depths of the Pacific, you can track them on Facebook!</p>
+          <p style="display:none">Scientists have tagged thousands of wild animals around the world. Befriend them to find out what they are doing, where and with whom. As they cover the expanse of the Arctic, or swim in the depths of the Pacific, you can track them on Facebook!</p>
           <a href="about-us" class="btns learn" style="display:none">Learn More</a> </div>
         <div class="slider-ani-pic" style="display:none;"><img src="images/banner-animal1.png"/></div>
       </div>
