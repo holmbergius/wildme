@@ -7,7 +7,7 @@
 <?php echo render('inc.js'); ?>
 </head>
 <body>
-<?php include_once("analyticstracking.php") ?>
+<?php include_once("/var/www/wildme/application/views/home/analyticstracking.php") ?>
 <div id="fb-root"></div>
 <script>
 //Initialize Facebook
