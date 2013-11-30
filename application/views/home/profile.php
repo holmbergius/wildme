@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>WILDME</title>
+<title>WILD ME</title>
 <?php
 $animal        = json_decode($animal, true);
 $animal_record = $animal['records'][0];
@@ -56,6 +56,7 @@ $shareImage	=	($animal_record['profile_pic'])?$animal_record['profile_pic']:$web
 </script>
 </head>
 <body>
+<?php include_once("analyticstracking.php") ?>
 <div id="fb-root"></div>
 <script>
 //Initialize Facebook
