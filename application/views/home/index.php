@@ -2,7 +2,7 @@
 <html xmlns:fb="http://www.facebook.com/2008/fbml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>WILD ME</title>
+<title>WILDME</title>
 
 <?php echo render('inc.js'); ?>
 </head>
