@@ -2471,7 +2471,7 @@ $(document).ready(function() {
 	$('.list-comment-follow2222222').each(function(e) {
 
 		var animal_id 	=   $(this).data('id');
-		$.get("http://fb.wildme.org/wildme/public/api/global_follows",{animal_id:animal_id,category_name:cat_name},function(data){
+		$.get("http://digital.cygnismedia.com/wildme-v2/public/api/global_follows",{animal_id:animal_id,category_name:cat_name},function(data){
 		
 			if(data.status == 'success')
 			{
@@ -2502,7 +2502,7 @@ function WildMegetAnimalDetails(){
 							 DisplayPaymentPopup(data.records);
 						}else{
 							
-							$("#wildme-aboption-div").append('<div id="wildme_adopt-form" style="" class="popup">  <div class="adopt-form-wrapper" style="min-height: 168px;"><span class="cross-icon-adopt"><img src="//fb.wildme.org/wildme/public/adopt-form/images/cross-icon.png" width="22" height="22" alt="" /></span> <div class="adopt-form-title"><div class="adopt-form-logo"><img src="//fb.wildme.org/wildme/public/images/logo.png" width="158" height="53" alt="" /></div></div><div style="" id="adopt-step4" class="adopt-slide"><div class="adopt-slide-inner"><p class="adopt-thank-you" style="text-align: center; ">Error While Adoption procedure, Please try again later</p><span id="close-adopt" class="close-text">Close</span></div></div></div>');	
+							$("#wildme-aboption-div").append('<div id="wildme_adopt-form" style="" class="popup">  <div class="adopt-form-wrapper" style="min-height: 168px;"><span class="cross-icon-adopt"><img src="//digital.cygnismedia.com/wildme-v2/public/adopt-form/images/cross-icon.png" width="22" height="22" alt="" /></span> <div class="adopt-form-title"><div class="adopt-form-logo"><img src="//digital.cygnismedia.com/wildme-v2/public/images/logo.png" width="158" height="53" alt="" /></div></div><div style="" id="adopt-step4" class="adopt-slide"><div class="adopt-slide-inner"><p class="adopt-thank-you" style="text-align: center; ">Error While Adoption procedure, Please try again later</p><span id="close-adopt" class="close-text">Close</span></div></div></div>');	
 							InitializeJs();
 						}
 					},
@@ -2536,9 +2536,9 @@ function DisplayPaymentPopup(data){
 	else nickname = nickname+ ' ';
 var popupHtml = '<div class="popup" style="display:none;" id="wildme_adopt-form">\
   <div class="adopt-form-wrapper">\
-  <span class="cross-icon-adopt"><img src="//fb.wildme.org/wildme/public/adopt-form/images/cross-icon.png" width="22" height="22" alt="" /></span>\
+  <span class="cross-icon-adopt"><img src="//digital.cygnismedia.com/wildme-v2/public/adopt-form/images/cross-icon.png" width="22" height="22" alt="" /></span>\
     <div class="adopt-form-title">\
-      <div class="adopt-form-logo"><img src="//fb.wildme.org/wildme/public/images/logo.png" width="158" height="53" alt="" /></div>\
+      <div class="adopt-form-logo"><img src="//digital.cygnismedia.com/wildme-v2/public/images/logo.png" width="158" height="53" alt="" /></div>\
     </div>\
     <div class="adopt-error-div"> Invalid card number. Please enter correct card number </div>\
     <div class="animal-code-strip">\
@@ -2630,7 +2630,7 @@ var popupHtml = '<div class="popup" style="display:none;" id="wildme_adopt-form"
     <div class="adopt-slide" id="adopt-step4" style="display:none;">\
       <div class="adopt-slide-inner">\
         <p class="adopt-thank-you">Thank you for adopting '+nickname+label+'. You have been assigned a Champion badge for your WildMe profile. Share the news with your friends and ask them to earn their Champion badge as well.</p>\
-        <div class="batch"><img src="//fb.wildme.org/wildme/public/images/batch.png" width="116" height="116" /></div>\
+        <div class="batch"><img src="//digital.cygnismedia.com/wildme-v2/public/images/batch.png" width="116" height="116" /></div>\
       </div>\
       <div id="adopt-btn4" class="adopt-outline-btn margin-top "> <span class="adopti-spinner rotating"></span> <a href="javascript:;" class="share-btn"><i></i>Share</a> </div>\
       <span class="close-text" id="close-adopt">Close</span>\
@@ -2901,7 +2901,7 @@ function shareAdoption()
 	
   var animal_id =  $("#animal_id").val();//$('#wildme-aboption-div').data('id');
 
-  url = 'http://fb.wildme.org/wildme/public/share/'+animal_id;
+  url = 'http://digital.cygnismedia.com/wildme-v2/public/share/'+animal_id;
 
 window.open('http://www.facebook.com/sharer/sharer.php?s=100&p[images][0]=&p[url]='+encodeURIComponent(url)+'&p[title]=&p[summary]=','sharer','toolbar=0,status=0,width=626,height=250');
 
