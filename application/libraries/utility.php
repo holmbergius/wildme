@@ -1,5 +1,7 @@
 <?php 
 
+ ini_set("memory_limit", '256M');
+ 
 class Utility 
 {
 	public static function mysql_query_string($string)
@@ -302,7 +304,7 @@ public static function Timezone($get_match_timezone,$get_user_gmt)
 	 $filename   =  $uploadfile1;
 	 $off_x = 0;
 	 $off_y = 0;
-	  
+	 
 	 /////////if image is png
 	 if($tempImageType == 'image/png')
 	 {
@@ -319,7 +321,7 @@ public static function Timezone($get_match_timezone,$get_user_gmt)
 	 }
 	 elseif($tempImageType == 'image/gif')
 	 {
-		  $src    =  imagecreatefromgif($uploadedfile);
+		  @$src    =  imagecreatefromgif($uploadedfile);
 		  imagecopyresampled($tmp,$src,$off_x,$off_y,0,0,$width_t,$height_t,$width,$height);
 		  imagepng($tmp,$filename,$quality);
 		  imagedestroy($src);
@@ -328,7 +330,7 @@ public static function Timezone($get_match_timezone,$get_user_gmt)
 	 elseif($tempImageType == 'image/jpeg')
 	 {
 		 ini_set("gd.jpeg_ignore_warning", 1);
-		  $src    =  imagecreatefromjpeg($uploadedfile);
+		  @$src    =  imagecreatefromjpeg($uploadedfile);
 		  imagecopyresampled($tmp,$src,$off_x,$off_y,0,0,$width_t,$height_t,$width,$height);
 		  imagepng($tmp,$filename,$quality);
 		  imagedestroy($src);
@@ -336,7 +338,7 @@ public static function Timezone($get_match_timezone,$get_user_gmt)
 	 }
 	 elseif($tempImageType == 'image/jpg')
 	 {
-		  $src    =  imagecreatefromjpeg($uploadedfile);
+		  @$src    =  imagecreatefromjpeg($uploadedfile);
 		  imagecopyresampled($tmp,$src,$off_x,$off_y,0,0,$width_t,$height_t,$width,$height);
 		  imagepng($tmp,$filename,$quality);
 		  imagedestroy($src);
@@ -344,7 +346,7 @@ public static function Timezone($get_match_timezone,$get_user_gmt)
 	 }
 	 elseif($tempImageType == 'image/bmp')
 	 {
-		  $src    =  imagecreatefromwbmp($uploadedfile);
+		  @$src    =  imagecreatefromwbmp($uploadedfile);
 		  imagecopyresampled($tmp,$src,$off_x,$off_y,0,0,$width_t,$height_t,$width,$height);
 		  imagepng($tmp,$filename,$quality);
 		  imagedestroy($src);

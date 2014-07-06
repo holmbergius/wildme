@@ -97,7 +97,6 @@ class Encounter {
 					$temp['orderby']  = " asc ";
 					$temp['encounter_id']     = $value->id;
 
-
 					$data1 = $media->get_medias($temp);
 					$media_details	  = $data1['records'];
 				}
@@ -106,13 +105,18 @@ class Encounter {
 				$data2 			= $Animal->get_animal($encounterData['record']['animal_id']);
 				$data2			= json_decode(json_encode($data2), TRUE);
 				$animal_details	= $data2['record'];
-				
+								
 				$Category  		= new Category;
 				$data3 			= $Category->get_category($animal_details['category_id']);
 				$data3			= json_decode(json_encode($data3), TRUE);
 				$cat_details	= $data3['record'];
 				
-					
+				if (!isset($animal_details['label']))
+				{
+					$animal_details['label'] = $cat_details['id_prefix'].$animal_details['id'];
+				}
+				
+				$data[$ind]['label']   	 		= $animal_details['label'];
 				$data[$ind]['gender']   	 	= $animal_details['sex'];
 				$data[$ind]['nick_name']   	 	= $animal_details['nick_name'];
 				$data[$ind]['category_title'] 	= $cat_details['title'];
@@ -205,6 +209,102 @@ class Encounter {
 				
 		return array('status' =>'success');
 	}	
+	// Decrement Comment count
+	public function get_commentdecrement($id)
+	{
+		$key = 'encounter_'.$id;
+		$query = DB::table('encounters')->where('id','=',$id)->decrement('comment_count');
+		Cache::forget($key);			
+				
+				
+		return array('status' =>'success');
+	}	
+	
+	public function facebook_post($param)
+ 	{
 
+		$Animal  		= new Animal;
+		$data2 			= $Animal->get_animal($param['animal_id']);
+		$data2			= json_decode(json_encode($data2), TRUE);
+		$animal_details	= $data2['record'];
+		
+		
+		$animal_id = $param['animal_id'];
+		$photographerName =  'Edward Cullen';
+		$recordedBy =  'Edward Cullen';
+		$verbatimLocality =  'Ningaloo Marine Park';
+		$gpsLatitude 	  =  '0';
+		$gpsLongitude     =  '0';
+		$catalogNumber =  18112005155826;
+		$dwcDateAdded 	=  date('Y-m-d h:i:s');
+		$genus =  '';
+		$modified = date('Y-m-d');
+		$specific_epithet =  '';
+		
+		$param['fb_id']= 100002629081938;
+ 		
+		$param['title'] = 'Checkout on Wild Me! Add an animal to your social network!';
+	 	
+		$param['description'] = 'Checkout activities on WildMe and explore more animals and find out what they are upto.. A fun and interactive way to follow animals.';
+ 		
+		$param['picture'] = 'http://fb.wildme.org/wildme/public/files/encounters/18112005155826/23_5_05_2_1.jpg';
+		
+		$param['link']= 'http://fb.wildme.org/wildme/public/';
+		
+		$id = DB::table('encounters')->insert_get_id(array('animal_id'		 	 => $animal_id, 
+																 'photographer_name' 	 => $photographerName,
+																 'recorded_by' 	   	 	 => $recordedBy,
+																 'verbatim_locality' 	 => $verbatimLocality,
+																 'latitude' 			 => $gpsLatitude,
+																 'longitude' 	 		 => $gpsLongitude,
+																 'catalog_number' 	 	 => $catalogNumber,
+																 'date_added' 	 		 => $dwcDateAdded,
+																 'genus' 	 		 	 => $genus,
+																 'modified' 	 		 => $modified,
+																 'specific_epithet' 	 => $specific_epithet,
+																 'modified' 	 		 => $modified
+														 ));
+
+		
+		
+		require_once 'application/libraries/facebook.php';
+		
+		$fb_id = $param['fb_id'];
+		$title = $param['title'];
+		$link = $param['link'];
+		$picture = $param['picture'];
+		$description = $param['description'];
+		
+        $app_id = Config::get("application.facebook_app_id");
+        $app_secret = Config::get("application.facebook_app_secret");
+        
+		  $config = array();
+		  $config['appId'] = $app_id;
+		  $config['secret'] = $app_secret;
+		  $facebook = new Facebook($config); 
+		  try{
+		  
+		   $access_token = $facebook->getAccessToken();
+		   $facebook->setAccessToken($access_token);
+		  
+		   $attachment =  array(   'access_token'  => $access_token,                        
+		///        'message'          => $comment,
+				'name'          => $title,
+				'link'          => $link,
+				'picture'       => $picture,
+				'description'   => $description,
+			   );
+		  
+		   $publish = $facebook->api('/'.$fb_id.'/feed', 'post', $attachment);
+		   return $publish;
+		  }
+		  catch (Exception $e)
+		  {
+		   return $e;
+		  }
+		  
+		  return array('status'=>'success');
+	 }
+ 
 }
 ?>

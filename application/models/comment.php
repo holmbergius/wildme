@@ -15,11 +15,11 @@ class Comment{
 		if($id > 0)
 		{
 			$key = 'comment_'.$id;
-			$data['id'] 		 = $id;
-			$data['user_id']	 = $param['user_id'];
-			$data['encounter_id'] = $param['encounter_id'];
-			$data['message'] 	 = $param['message'];
-			$data['date_added']  = $date_added;
+			$data['id'] 		 	= $id;
+			$data['user_id']	 	= $param['user_id'];
+			$data['encounter_id']	= $param['encounter_id'];
+			$data['message'] 	 	= $param['message'];
+			$data['date_added']  	= $date_added;
 			
 			$comment = new Encounter;
 			$increment = $comment->get_commentincrement($param['encounter_id']);
@@ -34,7 +34,7 @@ class Comment{
 			Cache::forever($key,$data);
 			$status = 'success';
 		}
-			return array('status'=>$status);
+			return array('data' => $data ,'status'=>$status);
 		
 	}
 	
@@ -72,15 +72,20 @@ class Comment{
 		$user_id 		 = Utility::mysql_query_string($param['user_id']);
 		$id				 = Utility::mysql_query_string($param['id']);
 		$sqlpart='';
+		$total = 0;
+
+		
 		
 		if ($id!='') $sqlpart .=" AND ( id = ".$id." ) ";
 		if ($encounter_id != '') $sqlpart .=" AND `encounter_id` = '".$encounter_id."' ";
-		if ($user_id != '') $sqlpart .=" AND `user_id` = '".$user_id."' ";
+		//if ($user_id != '') $sqlpart .=" AND `user_id` = '".$user_id."' ";
 		
 
 		$count  = DB::first("select COUNT(id) as total from comment where 1=1 $sqlpart");
 		$data   = array();
  		$status = 'error';
+
+ 		
  		
 		if($count->total>0)
 		{
@@ -89,17 +94,36 @@ class Comment{
 	 
 			foreach($comment as $ind => $value)
 			{
+				
 				$commentData	= $this->get_comment($value->id);	
 				$commentData	= json_decode(json_encode($commentData), TRUE);
+				$comment = new CommentLikes;
+				$counts = $comment->get_comment_like($value->id);
+
+				if($counts['totalrecords'] > 0)
+				{
+					$comment_like  = $comment->get_total_likes($value->id);
+					$total = $comment_like['data'];
+					$like_status  = $comment->get_like($user_id,$value->id);
+					$status = $like_status['data'];
+				}
+				else
+				{
+					$total = 0;
+					$status = "No";
+				}
 				
 				$log 			= new User;
 				$user_record 	= $log->get_user($commentData['record']['user_id']);
 				$user_record	= json_decode(json_encode($user_record), TRUE);
 				$commentData['record']['user_name'] = $user_record['record']['name'];
+				$commentData['record']['total_likes'] = $total;
+				$commentData['record']['like_status'] = $status;
 				$data[] = $commentData['record'];
 		
 				$status = 'success';
 			}
+
 			
 		}
 		else
@@ -111,7 +135,7 @@ class Comment{
 			return array('records' => $data, 'totalrecords' => $count->total,'status' => $status);	
 	}
 	
-	public function del_comment($id)
+	public function del_comment($id,$encounter_id)
 	{
 		$status = 'error';	
 		$key = 'comment_'.$id;
@@ -119,7 +143,12 @@ class Comment{
 		$count = DB::table('comment')->where('id','=',$id)->count();
 		if($count > 0)
 		{
+			$comment = new Encounter;
+			$decrement = $comment->get_commentdecrement($encounter_id);
+			
 			$data = DB::table('comment')->where('id','=',$id)->delete();
+
+			$data1 = DB::table('report_abuse')->where('comment_id','=',$id)->delete();
 		
 			Cache::forget($key);
 			
@@ -134,6 +163,63 @@ class Comment{
 
 		return array('status' => $status, 'msg' => $msg);
 	}
+
+	public function del_commentadmin($id,$encounter_id)
+	{
+		$status = 'error';	
+		$key = 'comment_'.$id;
+
+		$count = DB::table('comment')->where('id','=',$id)->count();
+		if($count > 0)
+		{
+			$comment = new Encounter;
+			$decrement = $comment->get_commentdecrement($encounter_id);
+			
+			$data = DB::table('comment')->where('id','=',$id)->delete();
+
+			$data1 = DB::table('report_abuse')->where('comment_id','=',$id)->delete();
+		
+			Cache::forget($key);
+			
+			$msg 		= 'record deleted';
+			$status 	= 'success';
+			
+		}
+		else
+		{
+			$msg = 'no record found for this id';
+		} 
+
+		return array('status' => $status, 'msg' => $msg);
+	}
+
+	public function del_commentByUserId($id)
+	{
+		$status = 'error';	
+		$key = 'comment_'.$id;
+
+		$count = DB::table('comment')->where('id','=',$id)->count();
+		if($count > 0)
+		{
+			$data = DB::table('comment')->where('id','=',$id)->delete();
+
+			$data1 = DB::table('report_abuse')->where('comment_id','=',$id)->delete();
+		
+			Cache::forget($key);
+			
+			$msg 		= 'record deleted';
+			$status 	= 'success';
+			
+		}
+		else
+		{
+			$msg = 'no record found for this id';
+		} 
+
+		return array('status' => $status, 'msg' => $msg);
+	}
+
+
 	
 /*************update comment*******************/
 	public function update_comment($param)
@@ -163,6 +249,26 @@ class Comment{
 			return array('status'=>'error', 'msg'=>'no record found for this id');	
 		}	
 		
+	}
+	
+
+/************* Comment Like *******************/
+	public function like_comment($param)
+	{
+		$id = $param['id'];
+		
+		$count = DB::first("SELECT count(id) as total FROM `comment` WHERE `id` = '".$id."' ");
+		if($count->total > 0)
+		{
+			$sql   = "UPDATE `comment` set `like_count` = `like_count` + 1 WHERE id = '".$id."'";	
+			$user = DB::query($sql);
+				
+			return array('status'=>'success');
+		}
+		else
+		{
+			return array('status'=>'error', 'msg'=>'no record found for this id');	
+		}
 	}
 	
 }

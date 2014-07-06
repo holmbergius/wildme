@@ -89,3 +89,32 @@
   
   
   </div><?php */?>
+  
+  
+ <!-- delete popup-->
+ <div class="popup" style="display:none;" id="delete_popup">
+ <div class="popup-inner report-spam-popup activites-poup" style="display:block; position:absolute;">
+  <div class="popup-inner-content white" style="position:relative;">
+     <h3 class="report-popup-title"><i id="animal_location" style="margin-left:5px; font-size:15px"> Report / Spam</i></h3>
+     <div id="report-text"><p class="report-text" >Are you sure you want to report this comment? </br>
+     <span class="yes-no-btn"><a href="javascript:;" id="confirm">Yes</a></span>
+       <span class="yes-no-btn"><a href="javascript:;" onclick="$('#delete_popup').fadeOut();">No</a></span>
+     <!--<button class="yes-no-btn" href="javascript:;" id="confirm" >Yes</button> <button href="javascript:;" class="hide-activites-poup">No</button>--></p> </div>
+   </div>
+</div>
+ </div>
+
+
+ <!-- ban user popup-->
+ <div class="popup" style="display:none;" id="ban_popup">
+ <div class="popup-inner report-spam-popup activites-poup" style="display:block; position:absolute;">
+  <div class="popup-inner-content white" style="position:relative;">
+     <h3 class="report-popup-title"><i id="login_location" style="margin-left:5px; font-size:15px">Sorry you are Banned</i></h3>
+     <div><p style="padding: 27px 17px 38px;" class="report-text">Your account has been temporary banned, please contact to the admin to continue.</br>
+    <!--  <span class="yes-no-btn"><a href="javascript:;" id="confirm1" >Okey</a></span> -->
+       <!-- <span class="yes-no-btn"><a href="javascript:;" onclick="$('#delete_popup').fadeOut();">No</a></span> -->
+     <!--<button class="yes-no-btn" href="javascript:;" id="confirm" >Yes</button> <button href="javascript:;" class="hide-activites-poup">No</button>--></p> </div>
+   </div>
+</div>
+ </div>
+ 

@@ -25,13 +25,15 @@
      
       <table width="100%" border="0" cellspacing="0" cellpadding="0">
         <tr class="title">
-          <td align="center" width="50px" class="first" style=" font-size: 14px;"><!-- <input name="" type="checkbox" id="checkbox" value="" /> -->
+          <td width="4%" align="center" style=" font-size: 14px;" class="first"><!-- <input name="" type="checkbox" id="checkbox" value="" /> -->
             ID</td>
-          <td class="width" style=" font-size: 14px;">Title</td>
-          <td class="width" style=" font-size: 14px;">Color</td>
-          <td class="width" style=" font-size: 14px;">Type</td>
-          <td class="width" style=" font-size: 14px;">Api Prefix</td>
-          <td style=" font-size: 14px;">Actions</td>
+          <td width="14%" style=" font-size: 14px;" class="width">Title</td>
+          <td width="9%" style=" font-size: 14px;" class="width">Color</td>
+          <td width="8%" style=" font-size: 14px;" class="width">Type</td>
+          <td width="19%" style=" font-size: 14px;" class="width">Api Prefix</td>
+           <td width="9%" style=" font-size: 14px;" class="width">Id Prefix</td>
+            <td width="7%" style=" font-size: 14px;" class="width">Min Amount</td>
+          <td width="10%" style=" font-size: 14px;">Actions</td>
         </tr>
         <tbody id="category_rows">
         </tbody>

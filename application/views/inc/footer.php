@@ -1,4 +1,4 @@
 <div id="footer">
-  <p>Copyright 2013 by Wild Me, a 501(c)(3) non-profit organization. All rights reserved. Photo copyrights held
+  <p>Copyright 2014 by Wild Me, a 501(c)(3) non-profit organization. All rights reserved. Photo copyrights held
     by original photographer. Powered by <a href="http://www.wildme.org/shepherd" target="_blank">Wildbook research software.</a> <a href="javascript:FB.Canvas.scrollTo(0,0);" class="show-terms">Terms & Conditions</a> | <a href="javascript:FB.Canvas.scrollTo(0,0);" class="show-privacy"> Privacy Policy</a></p>
   <span><a href="http://www.wildme.org/" target="_blank"><img src="<?php echo Config::get('application.web_url');?>images/footer-logo.jpg" /></a></span> <span class="last"><a href="http://www.cascadiaresearch.org/" target="_blank"><img src="<?php echo Config::get('application.web_url');?>images/collective-logo.png" /></a></span> </div>

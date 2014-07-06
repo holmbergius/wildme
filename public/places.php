@@ -1,4 +1,7 @@
 <?php
+$count_places 	 = 0;
+	$encounterData = '';
+	
 $response_places = file_get_contents("http://fb.wildme.org/wildme/public/api/encounter?limit=100&offset=0&animal_id=".$_REQUEST['id']."&media_offset=0&all_location=1&sortby=date_added&orderby=ASC");
 $response_places = json_decode($response_places,true);
 if ($response_places['status']=='success')
@@ -133,7 +136,12 @@ html, body {
     <?php 
 	 if($check_in != 1)
 	 {
-		 echo '<script>window.parent.document.getElementById("map-palces").innerHTML="<h3>No Places found.</h3>";</script>';
+		  echo '<script>window.parent.document.getElementById("map-palces-heading").style.display="none";</script>';
+		 echo '<script>window.parent.document.getElementById("map-palces").innerHTML="<h3 style=\'margin: 0px auto; width: 98%; text-align: center; border:none; background-color:#c6c6c6; padding-top: 13px; height: 27px; color: #fff; font-weight:bold; font: 15px \"latoregular\",Arial\'>No Places found.</h3>";</script>';
+		//   echo '<script>window.parent.$("#map-palces-heading").hide();</script>';
+		 
+		
+		
 	 }
 	?>
 

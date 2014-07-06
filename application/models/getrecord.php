@@ -1,14 +1,21 @@
 <?php  ini_set('max_execution_time','9999999999999999999999999');
+
 class Getrecord {
+	
+	public $curr_folder_name = '';
+	
 	
 	public function get_all_animal()
 	{
+		
 		$sql   = DB::query("SELECT `id` FROM `category` ");	
+		
 		foreach($sql as $ind => $value)
 		{
 			$this->get_animal($value->id);
 			$status= 'success'.$value->id;
 		}
+		
 		$this->get_profile_photo();
 		return array('status' => $status,'msg' => 'All animals done');
 	}
@@ -20,6 +27,12 @@ class Getrecord {
 		$cat_data		= json_encode($cat_data);
 		$cat_data		= json_decode($cat_data, TRUE);
 		$api_url		= $cat_data['record']['api_url']; 
+		$id_prefix		= $cat_data['record']['id_prefix']; 
+		
+		$folder_prefix = str_replace('-','',$id_prefix) ;
+		
+		$folder_name = DB::first("SELECT `name` FROM `folder` where is_active ='Yes' limit 1");
+		$this->curr_folder_name = $folder_name->name.'/'.$folder_prefix.'/';
 		
 		$status 		= 'error';
 		if($api_url	!= '')
@@ -56,11 +69,14 @@ class Getrecord {
 					{
 						$json[$ind]['nickNamer'] = '';
 					}
-					$sql   	= DB::first("SELECT count(id) as total FROM `animal` WHERE `id` = '".$json[$ind]['individualID']."' ");
-				
+					
+					$sql   	= DB::first("SELECT count(id) as total FROM `animal` WHERE `animal_id` = '".$json[$ind]['individualID']."' and `category_id` = '".$category_id."' ");
+					
+					//$id_prefix.
 					if($sql->total == 0)
 					{
-						$id = DB::table('animal')->insert_get_id(array('id'		 	 		 => $json[$ind]['individualID'], 
+						$id = DB::table('animal')->insert_get_id(array('label'	 	 		 => $id_prefix.$json[$ind]['individualID'], 
+																	   'animal_id' 	 		 => $json[$ind]['individualID'], 
 																	   'sex' 			 	 => $json[$ind]['sex'],
 																	   'nick_name' 	 		 => $json[$ind]['nickName'],
 																	   'nick_namer' 	   	 => $json[$ind]['nickNamer'],
@@ -68,22 +84,6 @@ class Getrecord {
 																	   'size' 				 => '',
 																	   'encounter_count' 	 => $json[$ind]['numberEncounters']
 														 ));
-						//$this->get_encounter($json[$ind]['individualID']);
-						/*if($id != 0)
-						{		
-							$data = array();				
-							$key = 'animal_'.$id; //set mem key
-							$data['id'] 		    		= $json[$ind]['individualID'];
-							$data['sex']					= $json[$ind]['sex'];
-							$data['nick_name']				= $json[$ind]['nickName'];
-							$data['nick_namer'] 			= $json[$ind]['nickNamer'];
-							$data['category_id']			= $category_id;
-							$data['size']					= '';
-							$data['encounter_count']		= $json[$ind]['numberEncounters'];
-							
-							Cache::forever($key, $data); // UPDATE memcache	
-								
-						}*/
 					}
 				}
 				$this->get_encounter($category_id);
@@ -117,29 +117,32 @@ class Getrecord {
 			$specific_epithet = '';
 			$modified = '';
 			
-			
 			$doc_path = Config::get('application.doc_path');
 			
-			$sql   = DB::query("SELECT `id` FROM `animal` where category_id = '".$category_id."' ");	
+			$sql   = DB::query("SELECT `id`,`animal_id` FROM `animal` where category_id = '".$category_id."' ");	
 			foreach($sql as $ind => $value_animal)
 			{
 				$animal_id = $value_animal->id;
-				
-				
+				$old_animal_id = $value_animal->animal_id;
 				$specific_epithet = '';
 				$modified = '';
 			
-				$make_dir = $doc_path.'files/'.$animal_id;		
+				$make_dir = $doc_path.$this->curr_folder_name.$animal_id;		
 				
 				if ( !file_exists($make_dir) ) {
 					
-					mkdir($make_dir);
+					if(mkdir($make_dir)){
+					
+					}else{
+						//call exception
+						$this->create_new_dir();
+					}
 				}
-					$temp 	= file_get_contents($api_url.'rest/org.ecocean.Encounter?individualID=="'.$animal_id.'"');
+					$temp 	= file_get_contents($api_url.'rest/org.ecocean.Encounter?individualID=="'.$old_animal_id.'"');
 					$var 	= preg_replace("/[\r\n]+/", " ", $temp);
 					$var 	= utf8_encode($var);
 					$json2 	= json_decode($var, true);
-			
+
 					/*$ch = curl_init('http://www.whaleshark.org/rest/org.ecocean.Encounter?individualID=="'.$animal_id.'"');
 					curl_setopt($ch, CURLOPT_NOBODY, true);
 					curl_exec($ch);
@@ -156,7 +159,6 @@ class Getrecord {
 						curl_close($ch);
 					}
 					while($retcode != '200');*/
-						
 					if (is_array($json2))
 					{
 						$k=0;
@@ -167,6 +169,7 @@ class Getrecord {
 								$check_ind = 1;
 							}
 							$k++;
+							
 							$photographerName = '';
 							$recordedBy = '';
 							$verbatimLocality = '';
@@ -262,16 +265,25 @@ class Getrecord {
 																 $key = 'encounters_'.$id; //set mem key
 																 Cache::forget($key); // UPDATE memcache	
 									
-									$make_dir_en = $doc_path.'files/'.$animal_id.'/'.$id;		
+									$make_dir_en = $doc_path.$this->curr_folder_name.$animal_id.'/'.$id;		
 				
 									if ( !file_exists($make_dir_en) ) {
 										
-										mkdir($make_dir_en);
+											if(mkdir($make_dir_en)){
+											}else{
+												//call exception
+												$this->create_new_dir();
+											}
 									}
-									$make_dir_encount = "http://fb.wildme.org/wildme/public/files/encounters/".$catalogNumber;
+									$make_dir_encount = "http://fb.wildme.org/wildme/public/".$this->curr_folder_name."encounters/".$catalogNumber;
 									if ( !file_exists($make_dir_encount) ) {
 										
-										mkdir($make_dir_encount);
+										if(mkdir($make_dir_encount)){
+											}else{
+												//call exception
+												$this->create_new_dir();
+											}
+										
 									}
 									
 									$sql_encounter_med   = DB::first("SELECT COUNT(id) as total FROM `media` where encounter_id = ".$id." ");
@@ -299,17 +311,35 @@ class Getrecord {
 																				 'modified' 	 		 => $modified
 																 ));
 																 
-								$make_dir_en = $doc_path.'files/'.$animal_id.'/'.$id;		
+								$make_dir_en = $doc_path.$this->curr_folder_name.$animal_id.'/'.$id;		
 				
 								if ( !file_exists($make_dir_en) ) {
 									
-									mkdir($make_dir_en);
+									//File::makeDirectory($make_dir_en, 0777, false, true);
+									if(mkdir($make_dir_en)){
+											}else{
+												//call exception
+												$this->create_new_dir();
+											}
+																		
 								}
-								$make_dir_encount = "http://fb.wildme.org/wildme/public/files/encounters/".$catalogNumber;
+								
+								$make_dir_encount = "http://fb.wildme.org/wildme/public/".$this->curr_folder_name."encounters/".$catalogNumber;
+								
 								if ( !file_exists($make_dir_encount) ) {
 									
-									mkdir($make_dir_encount);
+									if(mkdir($make_dir_encount)){
+											}else{
+												//call exception
+												$this->create_new_dir();
+											}
 								}
+								
+								//add post on FB
+								$datas = array();
+								$datas['animal_id'] =  $animal_id;
+								$this->facebook_post($datas);
+ 
 							}
 							
 							if($id != 0)
@@ -409,14 +439,20 @@ class Getrecord {
 	
 	public function get_media($catalog_number, $en_id, $animal_id, $api_url, $check_ind, $image_url)
 	{
-		
 		$first_pic = '';
 		$doc_path = Config::get('application.doc_path');
 		$web_url = Config::get('application.web_url');
 			
-		$make_dir = $doc_path.'files/'.$animal_id.'/'.$en_id.'';		
+		$make_dir = $doc_path.$this->curr_folder_name.$animal_id.'/'.$en_id.'';		
 		if ( !file_exists($make_dir) ) {
-			mkdir($make_dir);
+			
+			if(mkdir($make_dir)){
+			}else{
+				//call exception
+				$this->create_new_dir();
+			}
+											
+			
 		}
 		$total_pic = file_get_contents($api_url.'rest/org.ecocean.SinglePhotoVideo?correspondingEncounterNumber=="'.$catalog_number.'"');
 		
@@ -440,11 +476,15 @@ class Getrecord {
 				if($break_name[$index_of_ext] == 'JPG' || $break_name[$index_of_ext] == 'jpg' || $break_name[$index_of_ext] == 'PNG' || $break_name[$index_of_ext] == 'png' || $break_name[$index_of_ext] == 'gif' || $break_name[$index_of_ext] == 'jpeg' || $break_name[$index_of_ext] == 'bmp')
 				{
 					//incase of saving pic.
-					$make_dir2 = $doc_path.'files/encounters/'.$catalog_number.'';		
+					$make_dir2 = $doc_path.$this->curr_folder_name.'encounters/'.$catalog_number.'';		
 					if ( !file_exists($make_dir2) ) {
-						mkdir($make_dir2);
+						if(mkdir($make_dir2)){
+						}else{
+							//call exception
+							$this->create_new_dir();
+						}
 					}								 
-					$dir = $doc_path.'files/encounters/'.$catalog_number.'/'.$total_pic[$indd]['filename'];
+					$dir = $doc_path.$this->curr_folder_name.'encounters/'.$catalog_number.'/'.$total_pic[$indd]['filename'];
 					//incase of saving pic.
 					
 					$final_name = str_replace(" ","%20",$total_pic[$indd]['filename']);
@@ -466,7 +506,7 @@ class Getrecord {
 					}
 							 
 					//$pic = 'http://fb.wildme.org/wildme/public/files/encounters/'.$catalog_number.'/'.$final_name.'';
-					$dir2 = $doc_path.'files/'.$animal_id.'/'.$en_id.'/thumb-'.$total_pic[$indd]['filename'];
+					$dir2 = $doc_path.$this->curr_folder_name.$animal_id.'/'.$en_id.'/thumb-'.$total_pic[$indd]['filename'];
 					
 					$ch = curl_init($pic);
 					curl_setopt($ch, CURLOPT_NOBODY, true);
@@ -476,15 +516,15 @@ class Getrecord {
 					curl_close($ch);
 					if($retcode == '200')
 					{
-						$our_path = "http://fb.wildme.org/wildme/public/files/encounters/".$catalog_number."/".$final_name;
+						$our_path = "http://fb.wildme.org/wildme/public/".$this->curr_folder_name."encounters/".$catalog_number."/".$final_name;
 						//for adding profile pic.
 						if($check_ind == '1')
 						{
 							$data = DB::table('animal')->where('id','=',$animal_id)->update( array( 
 																				'profile_pic' 	 => $our_path
-																			 ));
+																				 ));
 						}
-						$check_path_thumb  = 'files/'.$animal_id.'/'.$en_id.'/thumb-'.$total_pic[$indd]['filename'];
+						$check_path_thumb  = $this->curr_folder_name.$animal_id.'/'.$en_id.'/thumb-'.$total_pic[$indd]['filename'];
 						
 						//$count_sql_check = DB::first("SELECT count(id) as total FROM `media` where encounter_id = '". $en_id."'   AND `thumb_path` = '".$check_path_thumb."'  ");
 						
@@ -494,8 +534,9 @@ class Getrecord {
 						{
 							$id = DB::table('media')->insert_get_id(array('encounter_id' 	 => $en_id,
 																		 'image_name' 	   	 => $our_path,
-																		 'thumb_path' 	   	 => 'files/'.$animal_id.'/'.$en_id.'/thumb-'.$total_pic[$indd]['filename']
+																		 'thumb_path' 	   	 => $this->curr_folder_name.$animal_id.'/'.$en_id.'/thumb-'.$total_pic[$indd]['filename']
 														 ));
+														 
 							if($id != 0)
 							{
 								$data = array();						
@@ -503,7 +544,7 @@ class Getrecord {
 								$data['id'] 		    	= $id;
 								$data['encounter_id'] 		= $en_id;
 								$data['image_name']			= $our_path;
-								$data['thumb_path']			= 'files/'.$animal_id.'/'.$en_id.'/thumb-'.$total_pic[$indd]['filename'];
+								$data['thumb_path']			= $this->curr_folder_name.$animal_id.'/'.$en_id.'/thumb-'.$total_pic[$indd]['filename'];
 								$data['is_valid']			= 0;
 								
 								Cache::forever($key, $data); // UPDATE memcache
@@ -532,7 +573,6 @@ class Getrecord {
 							}
 						
 						}
-					
 					}
 					else
 					{
@@ -540,17 +580,14 @@ class Getrecord {
 						if($count_sql_check == 0)
 						{
 							$id = DB::table('media')->insert_get_id(array('encounter_id' 	 => $en_id,
-																	 'image_name' 	   	 => $pic,
-																	 'thumb_path' 	   	 => '',
-																	 'is_valid' 	   	 =>	0 
+																	 'image_name' 	   	 	 => $pic,
+																	 'thumb_path' 	   		 => '',
+																	 'is_valid' 	   		 =>	0 
 													 ));
 						}							 
 					}
-					
 				}
-				
 			}	
-			
 		}
 		else
 		{
@@ -560,7 +597,6 @@ class Getrecord {
 		
 	}
 	
-	
 	public function get_occurrence($category_id)
 	{
 		$status = 'error';
@@ -569,6 +605,7 @@ class Getrecord {
 		$cat_data		= json_encode($cat_data);
 		$cat_data		= json_decode($cat_data, TRUE);
 		$api_url		= $cat_data['record']['api_url'];
+		$id_prefix		= $cat_data['record']['id_prefix'];
 		
 		if($category_id != 1)
 		{
@@ -604,11 +641,16 @@ class Getrecord {
 							
 							if($marked_ids[$in] != $marked_ids[$i])
 							{
-								$checkdb = DB::table('animal_friend')->where('animal_id','=',$marked_ids[$in])->where('friend_id','=',$marked_ids[$i])->count();
+					$animal_id1 = DB::first("SELECT `id` FROM `animal` where `animal_id` ='".$marked_ids[$in]."' and category_id ='".$category_id."' ");
+					$animal_id2 = DB::first("SELECT `id` FROM `animal` where `animal_id` ='".$marked_ids[$i]."' and category_id ='".$category_id."' ");
+							$animal_id1 = $animal_id1->id;
+							$animal_id2 = $animal_id2->id;
+							
+							$checkdb = DB::table('animal_friend')->where('animal_id','=',$animal_id1)->where('friend_id','=',$animal_id2)->count();
 								if($checkdb == 0 )
 								{
-									$id = DB::table('animal_friend')->insert_get_id(array('animal_id'		 => $marked_ids[$in], 
-																						  'friend_id' 		 => $marked_ids[$i],
+									$id = DB::table('animal_friend')->insert_get_id(array('animal_id'		 => $animal_id1, 
+																						  'friend_id' 		 => $animal_id2,
 																						  'count' 	 		 => '1'
 																	));
 									if($id != 0)
@@ -616,8 +658,8 @@ class Getrecord {
 										$data = array();						
 										$key = 'animal_friend_'.$id; //set mem key
 										$data['id'] 		    	= $id;
-										$data['animal_id'] 			= $marked_ids[$in];
-										$data['friend_id']			= $marked_ids[$i];
+										$data['animal_id'] 			= $animal_id1;
+										$data['friend_id']			= $animal_id2;
 										$data['count']				= 1;
 										
 										Cache::forever($key, $data); // UPDATE memcache		
@@ -626,7 +668,7 @@ class Getrecord {
 								}
 								else
 								{
-									DB::table('animal_friend')->where('animal_id','=',$marked_ids[$in])->where('friend_id','=',$marked_ids[$i])->increment('count');
+									DB::table('animal_friend')->where('animal_id','=',$animal_id1)->where('friend_id','=',$animal_id2)->increment('count');
 								}
 							}
 						}
@@ -641,348 +683,73 @@ class Getrecord {
 		return array('status' => $status,'msg' => 'occurrence');
 	}
 	
-	
-	
-	public function check_encounter()
-	{
-		$photographerName = '';
-		$recordedBy = '';
-		$verbatimLocality = '';
-		$gpsLatitude = '';
-		$gpsLongitude = '';
-		$catalogNumber = '';
-		$dwcDateAdded = '';
-		$genus = '';
-		$specific_epithet = '';
-		$modified = '';
+	public function facebook_post($param)
+ 	{
+		
+		$Animal  		= new Animal;
+		$data2 			= $Animal->get_animal($param['animal_id']);
+		$data2			= json_decode(json_encode($data2), TRUE);
+		$animal_details	= $data2['record'];
+		
+		$sql   = DB::query("SELECT `uid` FROM `adoptor` where `animal_id` = '".$param['animal_id']."' group by `uid` where `status` = 'Active' and `user_type` = 'application' ");	
+		foreach($sql as $ind => $value)
+		{
+		
+		$param['fb_id']=  $value->uid;
+ 		
+		$param['title'] = 'Checkout on Wild Me! Add an animal to your social network!';
+	 	
+		$param['description'] = 'Checkout activities on WildMe and explore more animals and find out what they are upto.. A fun and interactive way to follow animals.';
+ 		
+		
+		$param['picture'] = $animal_details['profile_pic']; //'http://fb.wildme.org/wildme/public/files/encounters/18112005155826/23_5_05_2_1.jpg';
+
+		$param['link'] = Config::get('application.web_url').'profile/'.$animal_details['label'];
+
+		require_once 'application/libraries/facebook.php';
+		
+		
+		$fb_id = $param['fb_id'];
+		$title = $param['title'];
+		$link = $param['link'];
+		$picture = $param['picture'];
+		$description = $param['description'];
+		
+        $app_id = Config::get("application.facebook_app_id");
+        $app_secret = Config::get("application.facebook_app_secret");
+        
+		  $config = array();
+		  $config['appId'] = $app_id;
+		  $config['secret'] = $app_secret;
+		  $facebook = new Facebook($config); 
+		  try{
+		  
+		   $access_token = $facebook->getAccessToken();
+		   $facebook->setAccessToken($access_token);
+		  
+		   $attachment =  array(   'access_token'  => $access_token,                        
+		///        'message'          => $comment,
+				'name'          => $title,
+				'link'          => $link,
+				'picture'       => $picture,
+				'description'   => $description,
+			   );
+		  
+		   $publish = $facebook->api('/'.$fb_id.'/feed', 'post', $attachment);
+		  // return $publish;
+		  }
+		  catch (Exception $e)
+		  {
+		   //return $e;
+		  }
+		  
+		}
 			
-		$api_url = 'http://www.whaleshark.org/';
-		$image_url = 'http://www.ecoceanusa.org/shepherd_data_dir/';
-		
-		$sql_count   = DB::first("SELECT count(id) as total FROM  `animal` WHERE id NOT IN (SELECT animal_id FROM encounters)");
-		if($sql_count->total >0)
-		{
-			$sql   = DB::query("SELECT id FROM  `animal` WHERE id NOT IN (SELECT animal_id FROM encounters)");
-			
-			foreach($sql as $ind => $value_animal)
-			{
-			$animal_id = $value_animal->id;
-			$temp  	= file_get_contents($api_url.'rest/org.ecocean.Encounter?individualID=="'.$animal_id.'"');
-			$var 	= preg_replace("/[\r\n]+/", " ", $temp);
-			$var 	= utf8_encode($var);
-			$json2 	= json_decode($var, true);
-				
-			if (is_array($json2))
-			{
-				foreach($json2 as $inds => $values)
-				{
-					if(isset($json2[$inds]['photographerName']))
-					{
-						$photographerName = $json2[$inds]['photographerName'];
-					}
-					if(isset($json2[$inds]['recordedBy']))
-					{
-						$recordedBy = $json2[$inds]['recordedBy'];
-					}
-					if(isset($json2[$inds]['verbatimLocality']))
-					{
-						$verbatimLocality = $json2[$inds]['verbatimLocality'];
-					}
-					if(isset($json2[$inds]['gpsLatitude']))
-					{
-						$json2[$inds]['gpsLatitude'] = str_replace("&deg;","", $json2[$inds]['gpsLatitude']);
-						if(is_numeric($json2[$inds]['gpsLatitude']))
-						{
-							$gpsLatitude = $json2[$inds]['gpsLatitude'];
-						}
-						else if(isset($json2[$inds]['decimalLatitude']))
-						{
-							if(is_numeric($json2[$inds]['decimalLatitude']))
-							{
-								$gpsLatitude = $json2[$inds]['decimalLatitude'];
-							} 
-						}
-					}
-					if(isset($json2[$inds]['gpsLongitude']))
-					{
-						$json2[$inds]['gpsLongitude'] = str_replace("&deg;","", $json2[$inds]['gpsLongitude']);
-						if(is_numeric($json2[$inds]['gpsLongitude']))
-						{
-							$gpsLongitude = $json2[$inds]['gpsLongitude'];
-						}
-						else if(isset($json2[$inds]['decimalLongitude']))
-						{
-							if(is_numeric($json2[$inds]['decimalLongitude']))
-							{
-								$gpsLongitude = $json2[$inds]['decimalLongitude'];
-							} 
-						}
-					}
-					if(isset($json2[$inds]['catalogNumber']))
-					{
-						$catalogNumber = $json2[$inds]['catalogNumber'];
-					}
-					if(isset($json2[$inds]['specificEpithet']))
-					{
-						$specific_epithet = $json2[$inds]['specificEpithet'];
-					}
-					if(isset($json2[$inds]['genus']))
-					{
-						$genus = $json2[$inds]['genus'];
-					}
-					if(isset($json2[$inds]['modified']))
-					{
-						$modified = $json2[$inds]['modified'];
-					}
-					if(isset($json2[$inds]['dwcDateAdded']))
-					{
-						$dwcDateAdded = $json2[$inds]['dwcDateAdded'];
-						$dwcDateAdded = date("Y-m-d H:i:s", strtotime($dwcDateAdded));
-					}
-					
-					$sql_encounter   = DB::query("SELECT `id`, `modified` FROM `encounters` where catalog_number = '". $catalogNumber."' LIMIT 1 ");	
-					$j=0;
-					$len = count($sql_encounter);//total length
-					if ($len>0) // record exists
-					{
-						$id = $sql_encounter[0]->id;
-						$ida = DB::table('encounters')->where('id','=',$id)->update(array('animal_id' => $animal_id, 
-																		 'photographer_name' 	 => $photographerName,
-																		 'recorded_by' 	   	 	 => $recordedBy,
-																		 'verbatim_locality' 	 => $verbatimLocality,
-																		 'latitude' 			 => $gpsLatitude,
-																		 'longitude' 	 		 => $gpsLongitude,
-																		 'catalog_number' 	 	 => $catalogNumber,
-																		 'date_added' 	 		 => $dwcDateAdded,
-																		 'genus' 	 		 	 => $genus,
-																		 'modified' 	 		 => $modified,
-																		 'specific_epithet' 	 => $specific_epithet,
-																		 'modified' 	 		 => $modified
-														 ));
-						$key = 'encounters_'.$id; //set mem key
-						Cache::forget($key); // UPDATE memcache	
-					}
-					else // Insert New
-					{
-		
-						$id = DB::table('encounters')->insert_get_id(array('animal_id'		 	 => $animal_id, 
-																		 'photographer_name' 	 => $photographerName,
-																		 'recorded_by' 	   	 	 => $recordedBy,
-																		 'verbatim_locality' 	 => $verbatimLocality,
-																		 'latitude' 			 => $gpsLatitude,
-																		 'longitude' 	 		 => $gpsLongitude,
-																		 'catalog_number' 	 	 => $catalogNumber,
-																		 'date_added' 	 		 => $dwcDateAdded,
-																		 'genus' 	 		 	 => $genus,
-																		 'modified' 	 		 => $modified,
-																		 'specific_epithet' 	 => $specific_epithet,
-																		 'modified' 	 		 => $modified
-														 ));
-														 
-						$data = DB::table('animal')->where('id','=',$animal_id)->update( array( 
-															'media' 	 	 => '0'
-															 ));								 
-						//$this->get_media($catalogNumber, $id,  $animal_id, $api_url, $check_ind, $image_url);
-					}
-					
-					if($id != 0)
-					{		
-						$data = array();				
-						$key = 'encounters_'.$id; //set mem key
-						$data['id'] 		    	= $id;
-						$data['animal_id'] 			= $animal_id;
-						$data['photographer_name']	= $photographerName;
-						$data['recorded_by']		= $recordedBy;
-						$data['verbatim_locality'] 	= $verbatimLocality;
-						$data['latitude']			= $gpsLatitude;
-						$data['longitude']			= $gpsLongitude;
-						$data['catalog_number']		= $catalogNumber;
-						$data['share_count']		= 0;
-						$data['like_count']			= 0;
-						$data['comment_count']		= 0;
-						$data['date_added']			= $dwcDateAdded;
-						$data['genus']				= $genus;								
-						$data['specific_epithet']	= $specific_epithet;
-						$data['modified']			= $modified;
-						
-						Cache::forever($key, $data); // UPDATE memcache	
-						
-						//$this->get_media($catalogNumber, $id, $animal_id);	
-						
-						
-						if(isset($json2[$inds]['size']) )
-						{
-							if($json2[$inds]['size'] != '')
-							{
-								$data = DB::table('animal')->where('id','=',$animal_id)->update( array( 
-														'size' 	 	 => $json2[$inds]['size']
-														 ));
-							}
-						}	
-					}
-				}
-			}
-			else
-			{
-			}
-			
-		}
-			$status = 'success';	
-		}
-		else
-		{
-			$status = 'error';
-		}
-		
-		return array('status' => $status);
-	}
-	
-	public function check_thumb()
-	{
-		$doc_path = Config::get('application.doc_path');
-		$sql_count   = DB::first("SELECT count(id) as total FROM  `media` WHERE thumb_path = '' limit 1 ");
-		if($sql_count->total >0)
-		{
-			$sql   = DB::query("SELECT id FROM  `media` WHERE thumb_path = '' AND image_name like 'http://www.ecoceanusa.org/shepherd_data_dir/encounters/%' ");
-			
-			foreach($sql as $ind => $value)
-			{
-				$log    		= new Media;
-				$data   		= $log->get_media($value->id);
-				$data 			= json_decode(json_encode($data),TRUE);
-				
-				$id 			= $data['record']['id'];
-				$en_id 			= $data['record']['encounter_id'];
-				$image_name 	= $data['record']['image_name'];
-				
-				$en    			= new Encounter;
-				$en_data   		= $en->get_encounter($en_id);
-				$en_data 		= json_decode(json_encode($en_data),TRUE);
-				
-				$animal_id 		= $en_data['record']['animal_id'];
-				
-				$is = @getimagesize ($image_name);
-				if ( !$is ) $image_name='';
-				elseif ( !in_array($is[2], array(1,2,3))   ) $image_name='';
-				elseif ( ($is['bits']>=8) ) $srcs[] = $image_name;
-				
-				
-				if($image_name != '')
-				{
-					$break_name = explode('/', $image_name);
-					$ind_last = count($break_name)-1;
-					
-					$dir2 = $doc_path.'files/'.$animal_id.'/'.$en_id.'/thumb-'.$break_name[$ind_last];
-					
-					$thumb_path = 'files/'.$animal_id.'/'.$en_id.'/thumb-'.$break_name[$ind_last];
-					
-					copy ($image_name,$dir2);
-											
-					$type    		= $is['mime'];
-					$width    		= $is[0];
-					$height   		= $is[1];
-					
-					utility::imageResize($type,$dir2,120,80,$width,$height,$dir2,0);
-					
-					$id = DB::table('media')->where('id','=',$id)->update(array('thumb_path'  => $thumb_path));
-					
-					$key = 'media_'.$id; //set mem key
-					Cache::forget($key);
-				}
-			}
-			$status = 'success';	
-		}
-		else
-		{
-			$status = 'error';
-		}
-		
-		return array('status' => $status);
-	}
-	
-	
-	public function update_thumb_path()
-	{
-		$id = '';
-		$doc_path = Config::get('application.doc_path');
-		$sql_count   = DB::first("SELECT count(id) as total FROM  `media` WHERE thumb_path = ''  ");
-		if($sql_count->total >0)
-		{
-			$sql   = DB::query("SELECT id FROM  `media` WHERE thumb_path = '' ");
-			
-			foreach($sql as $ind => $value)
-			{
-				//$id = $value;
-				$log    		= new Media;
-				$data   		= $log->get_media($value->id);
-				$data 			= json_decode(json_encode($data),TRUE);
-				
-				$id 			= $data['record']['id'];
-				$en_id 			= $data['record']['encounter_id'];
-				$image_name 	= $data['record']['image_name'];
-				
-				$en    			= new Encounter;
-				$en_data   		= $en->get_encounter($en_id);
-				$en_data 		= json_decode(json_encode($en_data),TRUE);
-				
-				$animal_id 		= $en_data['record']['animal_id'];
-				
-				$is = @getimagesize ($image_name);
-				if ( !$is ) $image_name='';
-				elseif ( !in_array($is[2], array(1,2,3))   ) $image_name='';
-				elseif ( ($is['bits']>=8) ) $srcs[] = $image_name;
-				
-				$make_dir = $doc_path.'files/'.$animal_id;
-				$make_dir2 = $doc_path.'files/'.$animal_id.'/'.$en_id;
-				
-				if ( !file_exists($make_dir) ) {
-				
-					mkdir($make_dir,0777);
-				}
-				if ( !file_exists($make_dir2) ) {
-					mkdir($make_dir2,0777, true);
-				}
-				if($image_name != '')
-				{
-					$break_name = explode('/', $image_name);
-					$ind_last = count($break_name)-1;
-						
-					$dir2 = $doc_path.'files/'.$animal_id.'/'.$en_id.'/thumb-'.$break_name[$ind_last];
-					
-					$thumb_path = 'files/'.$animal_id.'/'.$en_id.'/thumb-'.$break_name[$ind_last];
-					
-					if ( !file_exists($thumb_path) ) {
-										
-						copy ($image_name,$dir2);
-												
-						$type    		= $is['mime'];
-						$width    		= $is[0];
-						$height   		= $is[1];
-						
-						utility::imageResize($type,$dir2,120,80,$width,$height,$dir2,0);
-					}
-					$id = DB::table('media')->where('id','=',$id)->update(array('thumb_path'  => $thumb_path,'is_valid'  =>1));
-					
-					$key = 'media_'.$id; //set mem key
-					Cache::forget($key);
-	
-				}//id check
-			}
-			$status = 'success';	
-		}
-		else
-		{
-			$status = 'error';
-		}
-		
-		return array('status' => $status);
-	
-	}
-		
-		
+		  return array('status'=>'success');
+	 }
+	 	
 	public function get_profile_photo()
 	{
-	
 		$status = 'error';
 		
 		$sql   = DB::query("SELECT `id` FROM `animal` where profile_pic ='' ");	
@@ -1003,28 +770,28 @@ class Getrecord {
 		
 		return array('status' => $status, 'id'=>$animal_id);
 	}
-
+	
+	public function create_new_dir(){
+		
+		$folder_name = DB::first("SELECT `name`,`id` FROM `folder` where is_active ='Yes' limit 1");
+		
+		$curr_date = date('Y-m-d h:i:s');
+		
+		DB::table('folder')->where('id','=',$folder_name->id)->update(array('is_active' => 'No', 
+																	  'end_date' 	 => $curr_date			
+																	 ));
+																	 
+		$id = DB::table('folder')->insert_get_id(array('is_active'	 	 		 => 'Yes', 
+													   'name'	 	 			 => '', 
+													   'start_date' 	 		 => $curr_date
+													 ));
+													 
+		$new_name  = 'files'.$id;
+		DB::table('folder')->where('id','=',$id)->update(array('name' =>$new_name
+														));
+														 
+		mail('meran@cygnismedia.com','wild me cron job folder limit exceed','wild me cron job folder limit exceed');
+	
+	}
 }
 ?>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

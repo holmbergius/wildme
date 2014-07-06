@@ -12,69 +12,74 @@
 <script>
 //Initialize Facebook
 	FB.init({appId: applicationId, status: true, cookie: true, xfbml: true, oauth: true});
-
+	
 	(function() {
 	 var e = document.createElement('script');
 	 e.src = document.location.protocol + '//connect.facebook.net/en_US/all.js';
 	 e.async = true;
 	 document.getElementById('fb-root').appendChild(e);
 	}());
-
+	
 	//FB.Canvas.setSize({ height: 900 });
-
+	
 	var url = parseURL(window.location);
 	if ("a" in url.params) {
 	 Set_Cookie('affiliate', url.params['a'], '', '/', '', '' );
 	}
-
-
-
 	function logged_in(response) {
 	 	session_key = '';
 	 	access_token = response.authResponse.accessToken;
 	 	uid = response.authResponse.userID;
-
+		
 		FB.api('/me', function(resp) {
-
+			
 			  var userId = response.authResponse.userID;
 			  var userName	=	resp.name;
 			  var birthday	=	'';
 			  var userEmail	=	resp.email;
 			  var UserGender	=	resp.gender;
 			  var accessToken	=	access_token;
-
-
+			  
+			  
 			  //facebook_id	=	userId;
 			  //console.log(resp);
 			  //console.log(userId + userName + birthday + email +  gender + access_token);
 			 // console.log(resp); return false;
 			 // var pact_id='';
 			$.get(canvas_url+"api/login",  {id: userId, name: userName, email: userEmail,  accessToken:  access_token, age: birthday, gender: UserGender}, function(data){
-
+				 
 				 //console.log(data);
+         
 				 if(data.status === 'success' || data.status === 'success2')
 				 {
 				 	uid	=	userId;
 					user_name	=	userName;
-
+					
 					FB.Canvas.setAutoGrow();
 					getAnimalCategory(1);
 					getPopularActive('follow_count',1);
 					getPopularActive('encounter_count',2);
 					getUserFriends(uid,0,4,0);
-
+					
 					$('#fb_user_name').text(user_name);
 					$('#fb-user-pic').attr('src',"http://graph.facebook.com/"+uid+"/picture?width=33&height=33");
 					$('#user-page').attr('href',"<?php echo Config::get('application.web_url');?>user-page?id="+uid+"");
 				 }
+
+         else if(data.status === 'error2')
+         {
+             $('#ban_popup').fadeIn(); 
+         }
 					//window.parent.location	=	'http://apps.facebook.com/wildmeapp/';
-
+					
 			  }, "json" );
-
+				
 			  });
 		//login(uid, access_token);
 	}
 
+ 
+	
 	FB.getLoginStatus(function(response)
 	{
 	 FB.Event.subscribe('auth.authResponseChange', logged_in);
@@ -85,9 +90,20 @@
 			window.top.location = appInstallUrl;
 		}
 	});
+	
+
+  $(document).ready(function(){ 
+
+    $('#confirm1').click(function(){
+
+      $('#ban_popup').fadeOut();
+      window.parent.location  = 'http://apps.facebook.com/wildbook/';
+    });
 
 
-
+  });
+	
+	
 </script>
 
 <div class="popup-inner activites-poup photo-popup" id="show_popup_login" style="display:none; ">
@@ -125,25 +141,25 @@ Follow individual animals under study by researchers and learn more about their 
         <div class="slider-text">
           <h1 style="display:none">Follow your favorite whale sharks, <br />
             polar bears, giant manta rays and more.</h1>
-          <p style="display:none">Scientists have tagged thousands of wild animals around the world. Befriend them to find out what they are doing, where and with whom. As they cover the expanse of the Arctic, or swim in the depths of the Pacific, you can track them on Facebook!</p>
+          <p style="display:none">We’ve tagged thousands of wildlife animals around the world. Befriend them to find out what they’re doing, where and with whom. As they cover the expanse of the Sahara, or wade into the depths of the Pacific, you can track them on Facebook!</p>
           <a href="about-us" class="btns learn" style="display:none">Learn More</a> </div>
         <div class="slider-ani-pic" style="display:none;"><img src="images/banner-animal1.png"/></div>
       </div>
       <div class="post-listing group">
         <div class="post-listing-left">
-          <h1>Recent Activity</h1>
+          <h1>Recent Activites</h1>
           <div id="spinner-act" style="margin-left: 169px;
     margin-top: -20px; position: absolute; display:none;"><img class="icon-spin" src="images/sp-new.png"  /></div>
           <ul id="listActivites">
             <?php /*?><li>
-
+            
               <div class="pic">
                 <div class="align-div blue"> <img src="images/icon/01.png" /> </div>
               </div>
-
-
-
-
+              
+              
+              
+              
               <div class="details group">
                 <h4><a href="profile.php">Rex <span>(TX-004)</span></a> <span class="small">- 10 hours ago</span></h4>
                 <p>Whale Shark, male has been seen near <span><a href="#">West Bank of Flower
@@ -213,7 +229,7 @@ Follow individual animals under study by researchers and learn more about their 
                       <div class="list-comment-count-bg">125</div>
                     </div>
                   </div>
-                  <i class="icon-angle-right"></i>
+                  <i class="icon-angle-right"></i> 
                 </li><?php */?>
               </ul>
               <!---------------- step 2---------------->
@@ -230,7 +246,7 @@ Follow individual animals under study by researchers and learn more about their 
                       <div class="list-comment-count-bg">125</div>
                     </div>
                   </div>
-                  <i class="icon-angle-right"></i>
+                  <i class="icon-angle-right"></i> 
                 </li><?php */?>
               </ul>
             </div>

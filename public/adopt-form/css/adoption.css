@@ -1,0 +1,643 @@
+@charset "UTF-8";
+
+@-ms-viewport {
+    width:device-width;
+}
+
+@viewport {
+    width:device-width;
+}
+
+a,abbr,acronym,address,applet,article,aside,audio,b,big,blockquote,body,canvas,caption,center,cite,code,dd,del,details,dfn,div,dl,dt,em,embed,fieldset,figcaption,figure,footer,form,h1,h2,h3,h4,h5,h6,header,hgroup,html,i,iframe,img,ins,kbd,label,legend,li,mark,menu,nav-top,object,ol,output,p,pre,q,ruby,s,samp,section,small,span,strike,strong,sub,summary,sup,table,tbody,td,tfoot,th,thead,time,tr,tt,u,ul,var,video {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    font: inherit;
+    vertical-align: baseline;
+}
+
+article,aside,details,figcaption,figure,footer,header,hgroup,menu,nav-top,section {
+    display: block;
+}
+
+body {
+    line-height: 1;
+}
+
+ol,ul {
+    list-style: none;
+}
+
+blockquote,q {
+    quotes: none;
+}
+
+blockquote:after,blockquote:before,q:after,q:before {
+    content: '';
+    content: none;
+}
+
+table {
+    border-collapse: collapse;
+    border-spacing: 0;
+}
+
+*,:focus {
+    outline: 0;
+}
+
+
+@font-face {
+	font-family: 'FontAwesome';
+	src: url('font/fontawesome-webfont.eot');
+	src: url('font/fontawesome-webfont.eot?#iefix') format('embedded-opentype'), url('font/fontawesome-webfont.woff') format('woff'), url('font/fontawesome-webfont.ttf') format('truetype');
+	font-weight: normal;
+	font-style: normal;
+}
+@font-face {
+	font-family: 'latoblack';
+	src: url('font/lato-black-webfont.eot');
+	src: url('font/lato-black-webfont.eot?#iefix') format('embedded-opentype'), url('font/lato-black-webfont.woff') format('woff'), url('font/lato-black-webfont.ttf') format('truetype'), url('font/lato-black-webfont.svg#latoblack') format('svg');
+	font-weight: normal;
+	font-style: normal;
+}
+@font-face {
+	font-family: 'latobold';
+	src: url('font/lato-bold-webfont.eot');
+	src: url('font/lato-bold-webfont.eot?#iefix') format('embedded-opentype'), url('font/lato-bold-webfont.woff') format('woff'), url('font/lato-bold-webfont.ttf') format('truetype'), url('font/lato-bold-webfont.svg#latobold') format('svg');
+	font-weight: normal;
+	font-style: normal;
+}
+@font-face {
+	font-family: 'latolight';
+	src: url('font/lato-light-webfont.eot');
+	src: url('font/lato-light-webfont.eot?#iefix') format('embedded-opentype'), url('font/lato-light-webfont.woff') format('woff'), url('font/lato-light-webfont.ttf') format('truetype'), url('font/lato-light-webfont.svg#latolight') format('svg');
+	font-weight: normal;
+	font-style: normal;
+}
+@font-face {
+	font-family: 'latoregular';
+	src: url('font/lato-regular-webfont.eot');
+	src: url('font/lato-regular-webfont.eot?#iefix') format('embedded-opentype'), url('font/lato-regular-webfont.woff') format('woff'), url('font/lato-regular-webfont.ttf') format('truetype'), url('font/lato-regular-webfont.svg#latoregular') format('svg');
+	font-weight: normal;
+	font-style: normal;
+}
+@font-face {
+	font-family: 'webfontregular';
+	src: url('font/entypo_1-webfont.eot');
+	src: url('font/entypo_1-webfont.eot?#iefix') format('embedded-opentype'), url('font/entypo_1-webfont.woff') format('woff'), url('font/entypo_1-webfont.ttf') format('truetype'), url('font/entypo_1-webfont.svg#webfontregular') format('svg');
+	font-weight: normal;
+	font-style: normal;
+}
+* {
+	outline: none;
+}
+:focus {
+	outline: none;
+}
+
+a {
+	color: #0274df;
+	text-decoration:none;
+}
+.pull-left {
+	float: left;
+}
+.pull-right {
+	float: right;
+}
+
+
+.popup{
+	background:#000000;
+	background:rgba(0,0,0,0.7);
+	height: 100%;
+	left: 0;
+	overflow: hidden;
+	padding-bottom: 12px;
+	position:fixed;
+	top: -12px;
+	width: 100%;
+	z-index: 999999;
+}
+
+.adopt-field.card-field{
+ width:65%;
+ margin:0 22px 25px 0;
+ float:left;
+ }
+
+.adopt-field.select{
+ padding:0;
+ margin:0;
+ }
+
+.adopt-field.select select{
+ border:none;
+ margin:0;
+ border:none; background-image:none;
+ outline:none;
+ width:100%;
+ height:36px;
+ padding:9px 0 7px 10px;
+ display:block;
+ color:#7C8D90;
+ }
+/*========Adoption form===========*/
+.adopt-form-wrapper{
+	width:500px;
+	min-height:300px;
+	margin:0 auto;
+	position:relative;
+	padding-bottom:25px;
+	top:7%;
+	background:#FFFFFF;
+	}
+	
+.adopt-form-title{
+	width:100%;
+	height:60px;
+	background:#0084fb;
+	border-bottom:solid 2px #0062d6;
+	}
+
+.adopt-form-logo{
+	width:144px;
+	height:45px;
+	float:left;
+	position:relative;
+	top:6px;
+	left:10px;
+	}
+
+.adopt-form-logo img{
+	width:100%;
+	height:auto;
+	}			
+
+.animal-code-strip{
+	width:90%;
+	height:38px;
+	background:#ebf0f1;
+	margin:20px auto;
+	border:solid 6px #ebf0f1;
+	}
+
+hr.hori-line{
+	height:0px;
+	width:100%;
+	border-bottom:solid 1px #d6dddf;
+	border-top:none;
+	}	
+
+.animal-code-strip h2{
+	font:18px/18px 'latobold', Arial;
+	color:#2c3e50;
+	margin-left:15px;
+	float:left;
+	margin-top:2px;
+	}	
+
+.animal-code-strip h2 span{
+	font: 12px 'allerregular', Arial;
+	color:#7c8d90;
+	}	
+
+
+.animal-thumb{
+	width:39px;
+	height:39px;
+	float:left;
+	}
+
+.animal-thumb img{
+	width:100%;
+	height:auto;
+	}
+
+.animal-price-box{
+	width:115px;
+	height:38px;
+	border-left:solid 1px #dfe4e5;
+	float:right;
+	text-align:center;
+}
+
+.animal-price-box span{
+	font:15px 'allerregular', Arial;
+	color:#2c3e50;
+	position:relative;
+	top:10px;
+	}
+
+.adopt-slide{
+	width:100%;
+	height:auto;
+	margin-top:20px;
+}
+
+.adopt-slide-inner{
+	width:92%;
+	margin:0 auto;
+	}
+	
+.adopt-slide h3{
+	font:17px 'allerregular', Arial;
+	text-align:left;
+	color:#2c3e50;
+	padding-bottom:12px;
+	padding-left:23px;
+	}
+
+.adopt-slide ul{
+	padding:0;
+	margin:0 auto;
+	width:90%;
+	list-style:none;
+	}
+
+.adopt-slide ul li{
+	font:14px/20px 'allerregular', Arial;
+	color:#34495e;
+	background:url(http://fb.wildme.org/wildme/public/images/adopt-points-blts.png) no-repeat;
+	padding-left:25px;
+	margin-bottom:15px;
+	background-position:0px 3px;
+	list-style:none;
+	}
+
+.adopt-outline-btn{
+	width:206px;
+	height:49px;
+	margin:0 auto;
+	border:solid 1px  #fb6b1e;
+	background:#FFFFFF;
+	text-align:center;
+	position:relative;
+	}
+
+.adopti-spinner{
+	position:absolute;
+	width:35px;
+	height:35px;
+	left:0;
+	right:0;
+	margin:0 auto;
+	top:7px;
+	background:url(http://fb.wildme.org/wildme/public/images/orange-spinner@2x.png) no-repeat;
+	background-size:35px 35px;
+	display:none;
+	}
+.adopt-outline-btn:hover .adopti-spinner.rotating {
+    background: url("http://fb.wildme.org/wildme/public/images/orange-spinner-hover@2x.png") no-repeat scroll 0 0 / 35px 35px rgba(0, 0, 0, 0);
+}
+
+.adopt-outline-btn.margin-top{
+	margin-top:25px;
+	}
+
+.adopt-outline-btn a{
+	font:20px 'latobold', Arial;
+	text-transform:uppercase;
+	text-align:center;
+	color:#fb6b1e;
+	text-align:center;
+	display:block;
+	padding:13px 0px;
+	}
+
+.adopt-outline-btn:hover{
+	border:solid 1px  #fb6b1e;
+	background:#fb6b1e;
+	}
+
+.adopt-outline-btn:hover a{
+	color:#FFFFFF;
+	}				
+
+.adopt-field{
+	width:100%;
+	height:38px;
+	margin:0 auto;
+	padding:0px 15px;
+	-webkit-box-sizing: border-box; /* Safari/Chrome, other WebKit */
+	-moz-box-sizing: border-box;    /* Firefox, other Gecko */
+	box-sizing: border-box;
+	border:solid 1px #d6dddf;
+	margin-bottom:25px;
+	}
+
+.adopt-field.error{
+	border:solid 1px #f45b5b;
+	}
+
+.adopt-field.half-field{
+	width:138px;
+	margin:0;
+	float:left;
+	margin-right:22px;
+	position:relative;
+	}
+
+.adopt-field.half-field.last{
+	margin-right:0px;
+	}		
+
+.adopt-field input{
+	width:100%;
+	height:38px;
+	padding:0;
+	border:none;
+	background:none;
+	background-image:none;
+	padding:0px;
+	font:14px 'allerregular', Arial;
+	color:#2c3e50;
+	}
+
+.ques-icon{
+	position:absolute;
+	top:12px;
+	right:10px;
+	width:13px;
+	height:13px;
+	background:url(http://fb.wildme.org/wildme/public/images/ques-icon.png) no-repeat;
+	background-size:13px 13px;
+	cursor:pointer;
+	}	
+
+.adopt-error-div{
+	width:92%;
+	margin:20px auto 0px auto;
+	height:24px;
+	background:#ffe4e4;
+	border:solid 1px #ff1616;
+	font:13px 'allerregular', Arial;
+	color:#ff1616;
+	line-height: 24px;
+	text-indent: 10px;
+	display:none;
+	}
+
+.adopt-successful-div{
+	width:100%;
+	margin:20px auto 20px auto;
+	height:24px;
+	background:#2ecc70;
+	font:13px 'allerregular', Arial;
+	color:#fff;
+	line-height: 24px;
+	text-indent: 10px;
+	display:block;
+	}	
+
+p.adopt-thank-you{
+	font:14px/24px 'allerregular', Arial;
+	color:#34495e;
+	}
+
+.batch{
+	width:116px;
+	height:116px;
+	margin:20px auto;
+	position:relative;
+	right:15px;
+	}	
+
+.adopt-outline-btn a.share-btn{
+	text-indent:20px;
+	position:relative;
+	}
+
+.adopt-outline-btn a.share-btn i{
+	position:absolute;
+	display:block;
+	width:16px;
+	height:14px;
+	background:url(http://fb.wildme.org/wildme/public/images/share-icon.png) no-repeat;
+	left: 54px;
+	top: 18px;
+	}
+
+.adopt-outline-btn a.share-btn:hover i{
+		width:16px;
+	height:14px;
+	background:url(http://fb.wildme.org/wildme/public/images/share-icon-hover.png) no-repeat;	
+	}
+
+span.close-text{
+	display:block;
+	font:13px 'allerregular', Arial;
+	color:#008eda;
+	text-align:center;
+	padding:12px 0px 0px 0px;
+	cursor:pointer;
+	}	
+
+.cvv-notificaiton{
+	width: 129px;
+	height: 20px;
+	border-radius: 4px;
+	background: #2ecc70;
+	position: absolute;
+	left: -10px;
+	top: -32px;
+	font:11px 'allerregular', Arial;
+	color:#FFFFFF;
+	padding:3px;
+	display:none;
+}
+
+.cvv-notificaiton.active{
+	display:block;
+	}
+
+.cvv-notificaiton:after{
+	content: "";
+	position: absolute;
+	right: 10px;
+	bottom: -8px;
+	background:url(http://fb.wildme.org/wildme/public/images/cvv-indication@2x.png) no-repeat;
+	width:9px;
+	height:9px;
+	}	
+
+/*new css*/
+.adopt-button {
+	width: 114px;
+	height: 26px;
+	background: #3dcb71;
+	position: absolute;
+	top: 36px;
+	right: 14px;
+	text-align:center;
+	text-indent:20px;
+}
+.adopt-button a {
+	text-align:center;
+	color:#FFFFFF;
+	text-transform:uppercase;
+	font: 15px 'latobold', Arial;
+	line-height:28px;
+}
+.adopt-button a i {
+	display: block;
+	width: 28px;
+	height: 24px;
+	position: absolute;
+	top: 1px;
+	left: 1px;
+	background: #FFF url(../images/adopt-icon.png) no-repeat;
+	background-size:27px 22px;
+	background-position:1px 1px;
+}
+
+ @-webkit-keyframes rotating {
+ from {
+ -webkit-transform: rotate(0deg);
+ -moz-transform: rotate(0deg);
+ -o-transform: rotate(0deg);
+ -ms-transform: rotate(0deg);
+ transform: rotate(0deg);
+}
+to {
+	-webkit-transform: rotate(360deg);
+	-moz-transform: rotate(360deg);
+	-ms-transform: rotate(360deg);
+	-o-transform: rotate(360deg);
+	transform:rotate(360deg);
+}
+}
+ @keyframes rotating {
+ from {
+ -webkit-transform: translate3d(0, 0, 0) rotate(0deg);
+ -moz-transform: translate3d(0, 0, 0) rotate(0deg);
+ -ms-transform: translate3d(0, 0, 0) rotate(0deg);
+ -o-transform: translate3d(0, 0, 0) rotate(0deg);
+ transform: translate3d(0, 0, 0) rotate(0deg);
+}
+to {
+	-webkit-transform: translate3d(0, 0, 0) rotate(360deg);
+	-moz-transform: translate3d(0, 0, 0) rotate(360deg);
+	-ms-transform: translate3d(0, 0, 0) rotate(360deg);
+	-o-transform: translate3d(0, 0, 0) rotate(360deg);
+	transform: translate3d(0, 0, 0) rotate(360deg);
+}
+}
+.rotating {
+	-webkit-animation: rotating 2s linear infinite;
+	-moz-animation: rotating 2s linear infinite;
+	-o-animation: rotating 2s linear infinite;
+	-ms-animation: rotating 2s linear infinite;
+}
+
+.cross-icon-adopt{
+	width:22px;
+	height:22px;
+	position:absolute;
+	right:0;
+	top:15px;
+	right:15px;
+	cursor:pointer;
+}
+
+p.simple-text{
+	font:15px/24px 'allerregular', Arial;
+	color:#2c3e50;
+	margin-bottom:20px;
+	}			
+
+ @media all and (-webkit-min-device-pixel-ratio: 1.5) {
+	 
+.adopti-spinner{
+	background:url(http://fb.wildme.org/wildme/public/images/orange-spinner@2x.png) no-repeat;
+	background-size:35px 35px;
+	}
+
+.adopt-outline-btn a.share-btn i{
+	background:url(http://fb.wildme.org/wildme/public/images/share-icon.png) no-repeat;
+	background-size:16px 14px;
+	}	
+
+
+.ques-icon{
+	background:url(http://fb.wildme.org/wildme/public/images/ques-icon@2x.png) no-repeat;
+	background-size:13px 13px;
+	}	
+	 
+	
+.adopt-slide ul li{
+	background:url(http://fb.wildme.org/wildme/public/images/adopt-points-blts@2x.png) no-repeat;
+	background-size:14px 14px;
+}
+
+
+@media (min-width:0) and (max-width:640px) {
+body{
+	font-size:70%;
+	height:100%;
+	}
+
+.popup{
+	position:relative;
+	padding-bottom:50px;
+	}
+
+	
+	.adopt-form-wrapper{
+		width:90% !important; 		
+			}
+
+.animal-code-strip{
+	height:30px;
+	}
+
+.animal-thumb{
+	width:30px;
+	height:30px;
+	}
+
+.animal-code-strip h2{
+	font:15px/12px 'latobold', Arial;
+	}
+
+.animal-code-strip h2 span{
+	font: 10px 'allerregular', Arial;
+	}			
+
+.animal-price-box{
+	width: 80px;
+height: 30px;
+	}
+
+.animal-price-box span{
+	font: 13px 'allerregular', Arial;
+	top: 7px;
+	}
+.adopt-slide h3{
+	font: 14px 'allerregular', Arial;
+		padding-left: 14px;
+	}	
+
+.adopt-slide ul li{
+	font: 12px/15px 'allerregular', Arial;
+	}	
+	
+.adopt-field.half-field{
+	width: 31%;
+	margin-right: 8px;
+	}
+	
+hr.hori-line{
+	width:99%;
+	}		
+	
+}
+
+@media (min-width:321) and (max-width:480px) {
+
+.adopt-field.half-field{
+	margin-right: 16px;
+	}
+
+}

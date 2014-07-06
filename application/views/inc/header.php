@@ -81,6 +81,17 @@
   </div>
 </div>
 <div class="header-top">
+
+<?php
+
+if(Session::has('user_id') && Session::get('user_id') > 0  ){
+
+}else{
+echo '<script>FBLogin();</script>';
+
+}
+
+?>
 <input name="input_fb_id" id="input_fb_id" value="<?php echo Session::get('user_id'); ?>" type="hidden"  />
 <input name="animal_id" id="animal_id" value="<?php echo (isset($_REQUEST['id']))?$_REQUEST['id']:""; ?>" type="hidden"  />
   <div class="app-wraper">

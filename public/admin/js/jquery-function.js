@@ -21,11 +21,13 @@ if($("body").attr("class")=="onpage-user") {
    if($("body").attr("class")=="onpage-artist") {
 		$("#page-artist").addClass("selected");
 	}
+	
+	
 	if($("body").attr("class")=="onpage-password") {
 		$("#page-password").addClass("selected");
 	}
-	if($("body").attr("class")=="onpage-album") {
-		$("#page-album").addClass("selected");
+	if($("body").attr("class")=="onpage-adopters") {
+		$("#page-adopters").addClass("selected");
 	}
 	if($("body").attr("class")=="onpage-song") {
 		$("#page-song").addClass("selected");
@@ -43,7 +45,26 @@ if($("body").attr("class")=="onpage-user") {
 	if($("body").attr("class")=="onpage-genre") {
 		$("#page-genre").addClass("selected");
 	}
- 
+	if($("body").attr("class")=="onpage-dashboard") {
+		$("#page-dashboard").addClass("selected");
+	}
+ 	if($("body").attr("class")=="onpage-revenue") {
+		$("#page-revenue").addClass("selected");
+	}
+	if($("body").attr("class")=="onpage-individuals") {
+		$("#page-individual").addClass("selected");
+	}
+	if($("body").attr("class")=="onpage-report_abuse") {
+		$("#page-reports").addClass("selected");
+	}
+	
+	if($("body").attr("class")=="onpage-reminder") {
+		$("#page-reminder").addClass("selected");
+	}
+	if($("body").attr("class")=="onpage-report_abuse") {
+		$("#page-reports").addClass("selected");
+	}
+	
 });	 
 	
 $(document).ready(function(){

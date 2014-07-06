@@ -79,6 +79,16 @@ else
           <input name="url" id="url" type="text" value="<?php echo $category_record['api_url'];  ?>" placeholder="Enter URL"/>
         </div>
         
+          <div class="form-row">
+			<label>ID Prefix</label>
+          <input name="id_prefix" id="id_prefix" type="text" value="<?php echo $category_record['id_prefix'];  ?>" placeholder="Enter Id Prefix"/>
+        </div>
+        
+          <div class="form-row">
+			<label>Minimum Amount</label>
+          <input name="minimum_amount" id="minimum_amount" type="text" value="<?php echo $category_record['minimum_amount'];  ?>" placeholder="Enter Minimum Adoption Amount"/> <span style="color: #666666;font: 14px Calibri,Arial,Helvetica,sans-serif"> (The minimum adoption fees) </span>
+        </div>
+        
         <div class="form-row">
 			<label>Image URL</label>
           <input name="image_url" id="image_url" type="text" value="<?php echo $category_record['image_url'];  ?>" placeholder="Enter image URL"/>

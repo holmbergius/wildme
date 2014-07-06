@@ -68,7 +68,7 @@ class Userlog
 				$logData	= $this->get_user_log($value->id);	
 				$logData	= json_decode(json_encode($logData), TRUE);
 				
-				if($logData['record']['type'] == 'like_encounter' || $logData['record']['type'] == 'comment_encounter')
+				if($logData['record']['type'] == 'like_encounter' || $logData['record']['type'] == 'comment_encounter' || $logData['record']['type'] == 'adopt')
 				{
 					$en_id 		= $logData['record']['ref_id'];
 					$animal_id  = DB::first("select animal_id from encounters where id = '".$en_id."' ");
@@ -79,6 +79,7 @@ class Userlog
 					$out_ani = $ani->get_animal($animal_id->animal_id);
 					$out_ani = json_decode(json_encode($out_ani), TRUE);
 					
+					$logData['record']['label'] 	= $out_ani['record']['label'];
 					$logData['record']['nick_name'] 	= $out_ani['record']['nick_name'];
 					$logData['record']['sex'] 		= $out_ani['record']['sex'];
 					
@@ -97,6 +98,7 @@ class Userlog
 					
 					$logData['record']['nick_name'] 	= $out_ani['record']['nick_name'];
 					$logData['record']['sex'] 		= $out_ani['record']['sex'];
+					$logData['record']['label'] 	= $out_ani['record']['label'];
 					
 					$ani 	 = new Category;
 					$out_cat = $ani->get_category($out_ani['record']['category_id']);

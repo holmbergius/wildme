@@ -21,7 +21,7 @@
     </div>
     <div class="btn login"><a href="#" onClick="AdminLogin();">Log in</a></div>
   </div>
-  <p>Copyright © 2013 Wildme, All Rights reserved<span>Powered by Cygnis Media</span></p>
+  <p>Copyright © 2014 Wildme, All Rights reserved<span>Powered by Cygnis Media</span></p>
 </div>
 </div>
 

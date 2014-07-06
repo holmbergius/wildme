@@ -32,7 +32,6 @@ class Api_Controller extends Base_Controller {
 		$data   		= $log->get_encounter($category_id);
 		$output 		= $data;
 		echo json_encode($output);
-		
 	}
 	
 	public function get_media()
@@ -42,7 +41,6 @@ class Api_Controller extends Base_Controller {
 		$data   		= $log->get_all_media($category_id);
 		$output 		= $data;
 		echo json_encode($output);
-		
 	}
 
 	public function get_friends_cron()
@@ -52,7 +50,6 @@ class Api_Controller extends Base_Controller {
 		$data   		= $log->get_occurrence($category_id);
 		$output 		= $data;
 		echo json_encode($output);
-		
 	}
 	
 	public function get_cronjob()
@@ -62,7 +59,6 @@ class Api_Controller extends Base_Controller {
 		$data   		= $log->get_encounterCheck($category_id);
 		$output 		= $data;
 		echo json_encode($output);
-		
 	}
 	
 	
@@ -81,7 +77,6 @@ class Api_Controller extends Base_Controller {
 		$data   		= $log->check_thumb();
 		$output 		= $data;
 		echo json_encode($output);
-		
 	}
 	
 	public function get_profile_photo()
@@ -90,7 +85,6 @@ class Api_Controller extends Base_Controller {
 		$data   		= $log->get_profile_photo();
 		$output 		= $data;
 		echo json_encode($output);
-		
 	}
  
  /***********************************************************************************************************************
@@ -105,7 +99,6 @@ class Api_Controller extends Base_Controller {
 		$admin 		= new Admin;
 		$username	= Input::get('username');
 		$password	= Input::get('password');
-		
 	
 		if($username==NULL)
 		{
@@ -152,20 +145,298 @@ class Api_Controller extends Base_Controller {
 	  }
 	  
 
+  /*************************** Adoptor ******************************/
+
+/******************Insert Adoptor********************/
+	public function get_adoptors($id=NULL)
+ 	{
+		//Get All Category Record
+		
+		$param['offset']  = Input::get('offset');
+		$param['limit'] 	 = Input::get('limit');
+		$param['keyword'] = Input::get('keyword');
+		$param['sortby']  = Input::get('sortby');
+		$param['orderby'] = Input::get('orderby');
+		$param['animal_id'] = Input::get('animal_id');
+		
+		$param['date1'] = Input::get('date1');
+		$param['date2'] = Input::get('date2');
+		$param['adv_search'] = Input::get('adv_search');
+		$param['category_id'] = Input::get('category_id');
+		$param['sort_type'] = Input::get('sort_type');
+		$param['active_only'] = Input::get('active_only');
+		
+		if($param['offset']==NULL)$param['offset']=0;
+		if($param['limit']==NULL)$param['limit']=30;
+		if($param['keyword']==NULL)$param['keyword']='';
+		if($param['sortby']==NULL)$param['sortby']='date_added';
+		if($param['orderby']==NULL)$param['orderby']='ASC';
+		
+		$category  =  new Adoptor;
+		$data = $category->get_adoptors($param);
+		
+		$output = $data;
+		echo json_encode($output);
+	}
+	
+	public function post_checkout()
+ 	{
+		
+	header('Access-Control-Allow-Origin: *');  		
+	$cart    				 = new Adoptor;
+	
+	$param['cc_type']		 = Input::get('cc_type');
+	$param['cc_num'] 		 = Input::get('cc_num');
+	$param['fname']	 		 = Input::get('fname');
+	$param['address'] 		 = Input::get('address');
+	$param['exp_date']		 = Input::get('exp_date');
+	$param['exp_date2']		 = Input::get('exp_date2');
+	$param['ccv2']	  		 = Input::get('ccv2');
+	$param['street']  		 = Input::get('street');
+	$param['city'] 	  		 = Input::get('city');
+	$param['state'] 	  	 = Input::get('state');
+	$param['country']  		 = Input::get('country');
+	$param['zip'] 	  		 = Input::get('zip');
+	$param['amt'] 	  		 = Input::get('amt');
+	$param['desc']	  		 = Input::get('desc');
+	
+	$data = $cart->checkout_paypal($param);
+	echo json_encode($data);
+ }
+  
+  
+	
+	public function get_dashboard($id=NULL)
+ 	{
+		//Get All Category Record
+		
+		$param['id']      = Input::get('id');
+		$param['offset']  = Input::get('offset');
+		$param['limit'] 	 = Input::get('limit');
+		$param['keyword'] = Input::get('keyword');
+		$param['sortby']  = Input::get('sortby');
+		$param['orderby'] = Input::get('orderby');
+		$param['adv_search'] = Input::get('adv_search');
+		
+		if($param['offset']==NULL)$param['offset']=0;
+		if($param['limit']==NULL)$param['limit']=30;
+		if($param['keyword']==NULL)$param['keyword']='';
+		if($param['sortby']==NULL)$param['sortby']='id';
+		if($param['orderby']==NULL)$param['orderby']='ASC';
+		
+		$category  =  new Adoptor;
+		$data = $category->get_dashboard($param);
+		
+		$output = $data;
+		echo json_encode($output);
+	}
+	
+	public function get_chart($id=NULL)
+ 	{
+		//Get All Category Record
+		
+		$param['sortby']  = Input::get('sortby');
+		$param['orderby'] = Input::get('orderby');
+		
+		if($param['sortby']==NULL)$param['sortby']='id';
+		if($param['orderby']==NULL)$param['orderby']='ASC';
+		
+		$category  =  new Adoptor;
+		$data = $category->get_chart($param);
+		
+		$output = $data;
+		echo json_encode($output);
+	}
+	
+	public function get_chart_revenue($id=NULL)
+ 	{
+		//Get All Category Record
+		
+		$param['sortby']  = Input::get('sortby');
+		$param['orderby'] = Input::get('orderby');
+		
+		$param['date1'] = Input::get('date1');
+		$param['date2'] = Input::get('date2');
+		
+		if($param['sortby']==NULL)$param['sortby']='id';
+		if($param['orderby']==NULL)$param['orderby']='ASC';
+		
+		$category  =  new Adoptor;
+		$data = $category->get_chart_revenue($param);
+		
+		$output = $data;
+		echo json_encode($output);
+	}
+	
+	
+	public function post_adoptor()
+	{
+		header('Access-Control-Allow-Origin: *');  		
+		$param['uid'] 		  = Input::get('uid');
+		$param['animal_id']   = Input::get('animal_id');
+		$param['category_id'] = Input::get('category_id');
+		$param['nick_name']   = Input::get('nick_name');
+		$param['quote']    	  = Input::get('quote');
+		$param['amount']  	  = Input::get('amount');
+		$param['status']  	  = Input::get('status');
+		$param['user_type']  	= Input::get('user_type');
+		
+		if($param['uid']=='' || $param['animal_id']== '' || $param['category_id']== '' )
+		{
+			return json_encode(array('status'=>'error','msg'=>'parameters incomplete'));	
+		}
+		
+		else
+		{
+			$category = new Adoptor;
+			$output = $category->post_adoptor($param);
+			echo json_encode($output);	
+		}
+		
+	}
+
+	public function get_adoptor_cron(){
+	
+			$category = new Adoptorcron;
+			$output = $category->markexpire();
+			echo json_encode($output);	
+	}
+	
+
+	public function post_adoptor_qoute(){
+		
+		$param['uid'] 		  = Input::get('uid');
+		$param['animal_id']   = Input::get('animal_id');
+		$param['quote'] 	  = Input::get('quote');
+		$param['adopter_id']  = Input::get('adopter_id');
+		
+		if($param['uid']=='' || $param['animal_id']== '' || $param['quote']== '' )
+		{
+			return json_encode(array('status'=>'error','msg'=>'parameters incomplete'));	
+		}
+		
+		else
+		{
+			$category = new Adoptor;
+			$output = $category->update_qoute($param);
+			echo json_encode($output);	
+		}
+		
+	}
+
+	public function post_outside_adoptor()
+	{
+		header('Access-Control-Allow-Origin: *');  		
+		$param['uid'] 		  = Input::get('uid');
+		$param['animal_id']   = Input::get('animal_id');
+		$param['category_id'] = Input::get('category_id');
+		$param['nick_name']   = Input::get('nick_name');
+		$param['quote']    	  = Input::get('quote');
+		$param['amount']  	  = Input::get('amount');
+		$param['status']  	  = Input::get('status');
+		$param['name']  	  = Input::get('name');
+		$param['email']  	  = Input::get('email');
+		$param['user_type']  	= Input::get('user_type');
+		
+		if($param['uid']=='' || $param['animal_id']== '' || $param['category_id']== '' )
+		{
+			return json_encode(array('status'=>'error','msg'=>'parameters incomplete'));	
+		}
+		
+		else
+		{
+			$category = new Adoptor;
+			$output = $category->post_outside_adoptor($param);
+			echo json_encode($output);	
+		}
+		
+	}
 
 
+	public function put_adoptor()
+	{
+		$param['id'] 		  = Input::get('id');
+		$param['type']   = Input::get('type');
+		$param['value'] = Input::get('value');
+
+		
+		if($param['id']=='' || $param['type']== '' || $param['value']== '' )
+		{
+			return json_encode(array('status'=>'error','msg'=>'parameters incomplete'));	
+		}
+		
+		else
+		{
+			$category = new Adoptor;
+			$output = $category->put_adoptor($param);
+			echo json_encode($output);	
+		}
+		
+	}
+	
+	public function delete_adoptor($id=NULL)
+	{
+		$id = Input::get('id');
+		
+		if($id==NULL || $id<=0)
+		{
+			return json_encode(array('status'=>'error','msg'=>'record not found for this id'));	
+		}
+		else
+		{
+			$category = new Adoptor;
+			$output = $category->delete_adoptor($id);
+			echo json_encode($output);
+		}
+	}
+	
+	function post_paypalpro(){
+	
+		$param['cc_type'] 	 	= Input::get('cc_type');
+		$param['cc_number']  	= Input::get('cc_number');
+		$param['cc_exp'] 	 	= Input::get('cc_exp');
+		$param['ccv'] 		 	= Input::get('ccv');
+		$param['fname']    	 	= Input::get('fname');
+		$param['lname']  	 	= Input::get('lname');
+		$param['address'] 	 	= Input::get('address');
+		$param['citry'] 	 	= Input::get('citry');
+		$param['state'] 		= Input::get('state');
+		$param['zip']    		= Input::get('zip');
+		$param['amount']  		= Input::get('amount');
+		$param['uid']		    = Input::get('uid');
+		$param['animal_id']		= Input::get('animal_id');
+		$param['category_id']	= Input::get('category_id');
+		$param['nick_name']		= Input::get('nick_name');
+		$param['quote']		    = Input::get('quote');
+		
+		if($param['cc_type']=='' || $param['cc_number']== '' || $param['cc_exp']== '' || $param['ccv'] == '' || $param['amount'] == ''  )
+		{
+			return json_encode(array('status'=>'error','msg'=>'parameters incomplete'));	
+		}
+		
+		else
+		{
+			$category = new Payment;
+			$output = $category->transaction($param);
+			echo json_encode($output);	
+		}
+		
+		
+	}
   /*************************** Category ******************************/
 
 /******************Insert Category********************/
 	
 	public function post_category()
 	{
-		$param['title'] 	 = Input::get('title');
-		$param['icon'] 		 = Input::get('icon');
-		$param['color_code'] = Input::get('color_code');
-		$param['type'] 		 = Input::get('type');
-		$param['api_url']    = Input::get('api_url');
-		$param['image_url']  = Input::get('image_url');
+		$param['title'] 	 		= Input::get('title');
+		$param['icon'] 		 		= Input::get('icon');
+		$param['color_code'] 		= Input::get('color_code');
+		$param['type'] 		 		= Input::get('type');
+		$param['minimum_amount']    = Input::get('minimum_amount');
+		$param['api_url']    		= Input::get('api_url');
+		$param['id_prefix']    		= Input::get('id_prefix');
+		$param['image_url']  		= Input::get('image_url');
 		
 		if($param['title']=='' || $param['icon']== '' || $param['color_code']== '' || $param['type'] == '' || $param['api_url'] == '' || $param['image_url'] == '' )
 		{
@@ -184,13 +455,15 @@ class Api_Controller extends Base_Controller {
 /*************Update Category******************/
 	public function put_category()
 	{
-		$param['id'] 		 = Input::get('id');
-		$param['title'] 	 = Input::get('title');
-		$param['icon'] 		 = Input::get('icon');
-		$param['color_code'] = Input::get('color_code');
-		$param['type'] 		 = Input::get('type');
-		$param['api_url']    = Input::get('api_url');
-		$param['image_url']  = Input::get('image_url');
+		$param['id'] 		 		= Input::get('id');
+		$param['title'] 	 		= Input::get('title');
+		$param['icon'] 		 		= Input::get('icon');
+		$param['color_code'] 		= Input::get('color_code');
+		$param['type'] 		 		= Input::get('type');
+		$param['minimum_amount']    = Input::get('minimum_amount');
+		$param['api_url']    		= Input::get('api_url');
+		$param['id_prefix']    		= Input::get('id_prefix');
+		$param['image_url']  		= Input::get('image_url');
 		
 		if($param['id']=='')
 		{
@@ -229,7 +502,58 @@ class Api_Controller extends Base_Controller {
 		$output = $data;
 		echo json_encode($output);
 	}
-
+	
+	public function get_category_dashboard($id=NULL)
+ 	{
+		//Get All Category Record
+		
+		$param['id']      = Input::get('id');
+		$param['offset']  = Input::get('offset');
+		$param['limit'] 	 = Input::get('limit');
+		$param['keyword'] = Input::get('keyword');
+		$param['sortby']  = Input::get('sortby');
+		$param['orderby'] = Input::get('orderby');
+		
+		if($param['offset']==NULL)$param['offset']=0;
+		if($param['limit']==NULL)$param['limit']=30;
+		if($param['keyword']==NULL)$param['keyword']='';
+		if($param['sortby']==NULL)$param['sortby']='id';
+		if($param['orderby']==NULL)$param['orderby']='ASC';
+		
+		$category  =  new Category;
+		$data = $category->category_dashboard($param);
+		
+		$output = $data;
+		echo json_encode($output);
+	}
+	
+	
+	public function get_category_revenue($id=NULL)
+ 	{
+		//Get All Category Record
+		
+		$param['id']      = Input::get('id');
+		$param['offset']  = Input::get('offset');
+		$param['limit'] 	 = Input::get('limit');
+		$param['keyword'] = Input::get('keyword');
+		$param['sortby']  = Input::get('sortby');
+		$param['orderby'] = Input::get('orderby');
+		
+		$param['date1'] = Input::get('date1');
+		$param['date2'] = Input::get('date2');
+		
+		if($param['offset']==NULL)$param['offset']=0;
+		if($param['limit']==NULL)$param['limit']=30;
+		if($param['keyword']==NULL)$param['keyword']='';
+		if($param['sortby']==NULL)$param['sortby']='id';
+		if($param['orderby']==NULL)$param['orderby']='ASC';
+		
+		$category  =  new Category;
+		$data = $category->category_revenue($param);
+		
+		$output = $data;
+		echo json_encode($output);
+	}
 
 /*****************Delete Category*******************/
 	public function delete_category($id=NULL)
@@ -247,6 +571,50 @@ class Api_Controller extends Base_Controller {
 			echo json_encode($output);
 		}
 	}
+
+	/******************Update Category Adoption********************/
+	
+	public function post_update_cat_adoption()
+	{
+		$param['id']    		= Input::get('id');
+		$param['status']    	= Input::get('status');
+		
+		if($param['id']=='' || $param['status']=='')
+		{
+			return json_encode(array('status'=>'error','msg'=>'parameter missing'));	
+		}
+		
+		else
+		{
+			$category = new Category;
+			$output = $category->cat_adoption_status_change($param);
+			echo json_encode($output);	
+		}
+		
+	}
+
+
+/******************Update Category GPS********************/
+	
+	public function post_update_cat_gps()
+	{
+		$param['id']    		= Input::get('id');
+		$param['status']    	= Input::get('status');
+		
+		if($param['id']=='' || $param['status']=='')
+		{
+			return json_encode(array('status'=>'error','msg'=>'parameter missing'));	
+		}
+		
+		else
+		{
+			$category = new Category;
+			$output = $category->cat_gps_status_change($param);
+			echo json_encode($output);	
+		}
+		
+	}
+	
 
  /***************************User Log ******************************/
 
@@ -329,6 +697,7 @@ class Api_Controller extends Base_Controller {
 		$param['user_id'] 	 	= Input::get('user_id');
 		$param['encounter_id'] 	= Input::get('encounter_id');
 		$param['message'] 		= Input::get('message');
+	
 				
 		if($param['user_id']=='' || $param['encounter_id']== '' || $param['message']== '' )
 		{
@@ -347,10 +716,10 @@ class Api_Controller extends Base_Controller {
 /*************Update Comment******************/
 	public function put_comment()
 	{
-		$param['id'] 		 = Input::get('id');
-		$param['user_id'] 	 = Input::get('user_id');
-		$param['encounter_id'] 		 = Input::get('encounter_id');
-		$param['message'] = Input::get('message');
+		$param['id'] 		 	= Input::get('id');
+		$param['user_id'] 	 	= Input::get('user_id');
+		$param['encounter_id'] 	= Input::get('encounter_id');
+		$param['message'] 		= Input::get('message');
 		
 		if($param['id']=='')
 		{
@@ -391,10 +760,32 @@ class Api_Controller extends Base_Controller {
 	}
 		
 		
-		/*****************Delete Comment*******************/
+/*****************Delete Comment*******************/
 	public function delete_comment($id=NULL)
 	{
 		$id = Input::get('id');
+		$current_user_id = Input::get('current_id');
+		$user_id = Session::get('user_id');
+		$encounter_id =Input::get('encounter_id');
+
+		if( ($id==NULL || $id<=0 ) || ($current_user_id != $user_id)  )
+		{
+			return json_encode(array('status'=>'error','msg'=>'record not found for this id'));	
+		}
+
+		else
+		{
+			$comment = new Comment;
+			$output = $comment->del_comment($id,$encounter_id);
+			echo json_encode($output);
+		}
+	}
+
+/*****************Delete Comment admin*******************/
+	public function delete_comment_admin($id=NULL)
+	{
+		$id = Input::get('id');
+		$encounter_id = Input::get('encounter_id');
 		
 		if($id==NULL || $id<=0)
 		{
@@ -403,8 +794,25 @@ class Api_Controller extends Base_Controller {
 		else
 		{
 			$comment = new Comment;
-			$output = $comment->del_comment($id);
+			$output = $comment->del_commentadmin($id,$encounter_id);
 			echo json_encode($output);
+		}
+	}
+	
+/*************Like Comment******************/
+	public function put_like_comment()
+	{
+		$param['id'] 	= Input::get('id');
+				
+		if($param['id']=='')
+		{
+			return json_encode(array('status'=>'error','msg'=>'Parameters missing'));	
+		}
+		else
+		{
+			$comment = new Comment;
+			$output = $comment->like_comment($param);
+			echo json_encode($output);	
 		}
 	}
 
@@ -683,9 +1091,11 @@ class Api_Controller extends Base_Controller {
 	
 	public function post_follow()
 	{
+		header('Access-Control-Allow-Origin: *');  		
 		$param['user_id'] 	   = Input::get('user_id');
 		$param['animal_id']    = Input::get('animal_id');
-				
+		$param['user_type']    = Input::get('user_type');
+		
 		if($param['user_id']=='' || $param['animal_id']== '' )
 		{
 			return json_encode(array('status'=>'error','msg'=>'parameters incomplete'));	
@@ -699,6 +1109,14 @@ class Api_Controller extends Base_Controller {
 		}
 		
 	}
+
+	public function post_changeids()
+	{
+			$category = new Category;
+			$output = $category->change_ids();
+			echo json_encode($output);	
+	}
+
 
 /*****************Delete Follow*******************/
 	public function delete_follow($id=NULL)
@@ -714,6 +1132,23 @@ class Api_Controller extends Base_Controller {
 		{
 			$follow = new Follow;
 			$output = $follow->del_follow($param);
+			echo json_encode($output);
+		}
+	}
+	
+/*****************Get Single User*******************/
+	public function get_single_user($id=NULL)
+	{
+		$id 	   = Input::get('id');
+		
+		if($id=='' )
+		{
+			return json_encode(array('status'=>'error','msg'=>'parameters incomplete'));	
+		}
+		else
+		{
+			$user = new User;
+			$output = $user->get_user($id);
 			echo json_encode($output);
 		}
 	}
@@ -818,6 +1253,30 @@ class Api_Controller extends Base_Controller {
 			}
 		}
 	}	
+	
+	public function get_postfb()
+	{
+	
+		$param['animal_id']   	= Input::get('animal_id');
+		/*$param['title']  	 = Input::get('title');
+		$param['link']       = Input::get('link');
+		$param['picture']   = Input::get('picture');
+		$param['description']   = Input::get('description');
+		|| $param['picture'] == '' || $param['description'] == '' || $param['link'] == ''*/
+		
+		if($param['animal_id'] == '' )
+		{
+			echo json_encode(array('status' => 'error','msg' => 'animal_id must be given' )); 
+		}
+		else
+		{
+			$encounter = new Encounter; 
+			$data = $encounter->facebook_post($param);
+			echo json_encode($data); 
+		}
+	}	
+	
+	
 	
 /*****************Follow increment**********************/
 	public function get_followincrement()
@@ -948,6 +1407,7 @@ class Api_Controller extends Base_Controller {
 
 	public function get_login()
 	{ 	
+		header('Access-Control-Allow-Origin: *');  
 		$login 			= new Login;
 		
 		$id				= Input::get('id');
@@ -965,18 +1425,18 @@ class Api_Controller extends Base_Controller {
 
 		if ($id != '' && $accessToken != '')
 		{
-			//Check if user exist in database/memcache or not
-			//$userExist = $login->userExist($id);
-			
-			//If user exist than get their details from database or memcache
-		//	if($userExist==true)
-		//	{
-			//	$userData = $login->getUserDetails($id);	
-			//	$output = json_encode($userData);				
-			//	echo $output;	
-		//	}
-			//else
-			//{
+				//Check if user exist in database/memcache or not
+				//$userExist = $login->userExist($id);
+				
+				//If user exist than get their details from database or memcache
+				//	if($userExist==true)
+				//	{
+				//	$userData = $login->getUserDetails($id);	
+				//	$output = json_encode($userData);				
+				//	echo $output;	
+				//	}
+				//else
+				//{
 				//Get user details from facebook
 				//$user = $login->getUserDetailsFromFacebook($id, $accessToken);	
 				// return data
@@ -1092,8 +1552,445 @@ class Api_Controller extends Base_Controller {
 		}
 	}
 	
+	
+ /*************************** Reminder ******************************/
+
+/******************Insert Reminder********************/
+	
+	public function post_add_reminder()
+	{
+		$param['title']    	= Input::get('title');
+		$param['interval']  = Input::get('interval');
+		$param['period']    = Input::get('period');
+		$param['template']  = Input::get('template');
+				
+		if($param['title']=='' || $param['interval']== '' || $param['period']== '')
+		{
+			return json_encode(array('status'=>'error','msg'=>'parameter missing'));	
+		}
+		
+		else
+		{
+			$reminder = new Reminder;
+			$output = $reminder->add_reminder($param);
+			echo json_encode($output);	
+		}
+		
+	}
+	
+/******************Update Reminder********************/
+	
+	public function post_update_reminder()
+	{
+		$param['id']    	= Input::get('id');
+		$param['title']    	= Input::get('title');
+		$param['interval']  = Input::get('interval');
+		$param['period']    = Input::get('period');
+		$param['template']  = Input::get('template');
+				
+		if($param['id']=='' || $param['title']=='' || $param['interval']== '' || $param['period']== '')
+		{
+			return json_encode(array('status'=>'error','msg'=>'parameter missing'));	
+		}
+		
+		else
+		{
+			$reminder = new Reminder;
+			$output = $reminder->update_reminder($param);
+			echo json_encode($output);	
+		}
+		
+	}
+
+	public function get_reminder()
+	{				
+		$id    	= Input::get('id');
+		if($id =='')
+		{
+			return json_encode(array('status'=>'error','msg'=>'parameter missing'));	
+		}
+		
+		else
+		{
+			$reminder = new Reminder;
+			$output = $reminder->get_reminder($id);
+			echo json_encode($output);	
+		}
+	}
+
+/***************Get Reminders ************/	
+ 	public function get_reminders()
+ 	{
+		//Get All Records
+		$param['id']      = Input::get('id');
+		$param['offset']  = Input::get('offset');
+		$param['limit'] 	= Input::get('limit');
+		$param['keyword'] = Input::get('keyword');
+		$param['sortby']  = Input::get('sortby');
+		$param['orderby'] = Input::get('orderby');
+		
+		if($param['offset']==NULL)$param['offset']=0;
+		if($param['limit']==NULL)$param['limit']=30;
+		if($param['keyword']==NULL)$param['keyword']='';
+		if($param['sortby']==NULL)$param['sortby']='id';
+		if($param['orderby']==NULL)$param['orderby']='ASC';
+		
+		$reminder  =  new Reminder;
+		$data = $reminder->get_all_reminders($param);
+		
+		$output = $data;
+		echo json_encode($output);
+	}
+
+
+/*****************Delete Reminder*******************/
+	public function delete_reminder()
+	{
+		$id = Input::get('id');
+		
+		if($id==NULL || $id<=0)
+		{
+			return json_encode(array('status'=>'error','msg'=>'parameter missing'));	
+		}
+		else
+		{
+			$reminder = new Reminder;
+			$output = $reminder->del_reminder($id);
+			echo json_encode($output);
+		}
+	}
+
+ /*************************** Report Abuse Comment ******************************/
+
+/****************** Add Report ********************/
+	
+	public function post_add_report()
+	{
+		$param['comment_id']    = Input::get('comment_id');
+		$param['reporter_id']  = Input::get('reporter_id');
+		
+		if($param['comment_id']=='' || $param['reporter_id']== '' )
+		{
+			return json_encode(array('status'=>'error','msg'=>'parameter missing'));	
+		}
+		
+		else
+		{
+			$report = new ReportAbuse;
+			$output = $report->add_report($param);
+			echo json_encode($output);	
+		}
+		
+	}
+
+
+/***************** Delete Report *******************/
+	
+	public function delete_report()
+	{
+		$id = Input::get('id');
+		
+		if($id==NULL || $id<=0)
+		{
+			return json_encode(array('status'=>'error','msg'=>'parameter missing'));	
+		}
+		else
+		{
+			$report = new ReportAbuse;
+			$output = $report->del_report($id);
+			echo json_encode($output);
+		}
+	}
+
+	/***************** Get Report *******************/
+	
+ 	public function get_reports()
+ 	{
+		//Get All Records
+		$param['offset']  = Input::get('offset');
+		$param['limit'] 	= Input::get('limit');
+		$param['sortby']  = Input::get('sortby');
+		$param['orderby'] = Input::get('orderby');
+		
+		if($param['offset']==NULL)$param['offset']=0;
+		if($param['limit']==NULL)$param['limit']=30;
+		if($param['sortby']==NULL)$param['sortby']='id';
+		if($param['orderby']==NULL)$param['orderby']='ASC';
+		
+		$report  =  new ReportAbuse;
+		$data = $report->get_all_reports($param);
+		
+		$output = $data;
+		echo json_encode($output);
+	}
+
+	
+/******************Update Badge********************/
+	
+	public function post_update_badge()
+	{
+		$param['id']    			= Input::get('id');
+		$param['adoptor_badge']    	= Input::get('adoptor_badge');
+		
+		if($param['id']=='' || $param['adoptor_badge']=='')
+		{
+			return json_encode(array('status'=>'error','msg'=>'parameter missing'));	
+		}
+		
+		else
+		{
+			$user = new User;
+			$output = $user->update_adoptor_badge($param);
+			echo json_encode($output);	
+		}
+	}
+
+	/******************Update user********************/
+	
+	public function post_update_banuser()
+	{
+		$param['id']    = Input::get('id');
+		$param['ban_status']    = Input::get('ban_status');
+		
+		if($param['id']=='')
+		{
+			return json_encode(array('status'=>'error','msg'=>'parameter missing'));	
+		}
+		
+		else
+		{
+			$user = new User;
+			$output = $user->update_ban_user($param);
+			echo json_encode($output);	
+		}
+	}
+	
+/******************Update Adoption********************/
+	
+	public function post_update_adoption()
+	{
+		$param['id']    		= Input::get('id');
+		$param['status']    	= Input::get('status');
+		
+		if($param['id']=='' || $param['status']=='')
+		{
+			return json_encode(array('status'=>'error','msg'=>'parameter missing'));	
+		}
+		
+		else
+		{
+			$animal = new Animal;
+			$output = $animal->adoption_status_change($param);
+			echo json_encode($output);	
+		}
+		
+	}
+
+
+/******************Update GPS********************/
+	
+	public function post_update_gps()
+	{
+		$param['id']    		= Input::get('id');
+		$param['status']    	= Input::get('status');
+		
+		if($param['id']=='' || $param['status']=='')
+		{
+			return json_encode(array('status'=>'error','msg'=>'parameter missing'));	
+		}
+		
+		else
+		{
+			$animal = new Animal;
+			$output = $animal->gps_status_change($param);
+			echo json_encode($output);	
+		}
+		
+	}
+	
+	
+/******************User Setting Add********************/
+	
+	public function post_add_user_setting()
+	{
+		$param['uid']    			= Input::get('uid');
+		$param['animal_id']    		= Input::get('animal_id');
+		$param['allow_posting']    	= Input::get('allow_posting');
+		
+		if($param['uid']=='' || $param['animal_id']=='')
+		{
+			return json_encode(array('status'=>'error','msg'=>'parameter missing'));	
+		}
+		
+		else
+		{
+			$user = new UserSetting;
+			$output = $user->add_setting($param);
+			echo json_encode($output);	
+		}
+	}
+	
+/******************User Setting Posting********************/
+	
+	public function put_posting_update()
+	{
+		$param['id']    	= Input::get('id');
+		$param['start']    	= Input::get('start');
+		$param['stop']    	= Input::get('stop');
+		
+		if($param['id']=='' )
+		{
+			return json_encode(array('status'=>'error','msg'=>'parameter missing'));	
+		}
+		else
+		{
+			$user = new UserSetting;
+			$output = $user->posting_update($param);
+			echo json_encode($output);	
+		}
+	}
+	
+	/***************** Get Researcher *******************/
+	
+ 	public function get_researchers()
+ 	{
+		//Get All Records
+		$param['offset']  = Input::get('offset');
+		$param['limit'] 	= Input::get('limit');
+		$param['sortby']  = Input::get('sortby');
+		$param['orderby'] = Input::get('orderby');
+		$param['animal_id'] = Input::get('animal_id');
+		
+		if($param['offset']==NULL)$param['offset']=0;
+		if($param['limit']==NULL)$param['limit']=30;
+		if($param['sortby']==NULL)$param['sortby']='animal_id';
+		if($param['orderby']==NULL)$param['orderby']='ASC';
+		
+		$reseacher  =  new Reseacher;
+		$data = $reseacher->get_all_researchers($param);
+		
+		$output = $data;
+		echo json_encode($output);
+	}
+	
+	/***************** Get Stories *******************/
+	
+ 	public function get_stories()
+ 	{
+		//Get All Records
+		$param['offset']  = Input::get('offset');
+		$param['limit'] 	= Input::get('limit');
+		$param['sortby']  = Input::get('sortby');
+		$param['orderby'] = Input::get('orderby');
+		$param['animal_id'] = Input::get('animal_id');
+		
+		if($param['offset']==NULL)$param['offset']=0;
+		if($param['limit']==NULL)$param['limit']=30;
+		if($param['sortby']==NULL)$param['sortby']='animal_id';
+		if($param['orderby']==NULL)$param['orderby']='ASC';
+		
+		$reseacher  =  new Story;
+		$data = $reseacher->get_all_stories($param);
+		
+		$output = $data;
+		echo json_encode($output);
+	}
+	
+	/******************Post Like********************/
+
+	public function post_like()
+ 	{
+
+		$param['comment_id']    = Input::get('comment_id');
+		$param['user_id']    	= Input::get('user_id');
+		
+		$like  =  new CommentLikes;
+		$data = $like->post_like($param);
+		
+		$output = $data;
+		echo json_encode($output);
+	}
+
+	/******************Post Like********************/
+
+	public function delete_unlike()
+ 	{
+
+		$param['comment_id']    = Input::get('comment_id');
+		$param['user_id']    	= Input::get('user_id');
+		
+		$like  =  new CommentLikes;
+		$data = $like->del_unlike($param);
+		
+		$output = $data;
+		echo json_encode($output);
+	}
+
+	public function get_animal_detail()
+ 	{
+		header('Access-Control-Allow-Origin: *');  
+		$param['animal_id']  = Input::get('animal_id');
+		//print_r($param['animal_id']);die();
+		$animal  =  new Animal;
+		$data = $animal->get_animal_details($param);
+		
+		$output = $data;
+		echo json_encode($output);
+	}
+	
+	
+	 /**********************get followers of an animal id***************************/
+	public function get_global_follows()
+	{
+		header('Access-Control-Allow-Origin: *');  
+		$param['animal_id'] = Input::get('animal_id');
+		$param['category_name']	= Input::get('category_name');
+		
+	
+		if(empty($param['animal_id']))
+		{
+			echo json_encode(array('status' => 'error','msg' => 'animal id and category name must be given' )); 
+		}
+		else
+		{
+			$follower = new Follow;
+			$output = $follower->get_global_follows($param);
+			echo json_encode($output); 
+		}
+	}
+
+	public function get_dir_count()
+	{
+		$follower = new Follow;
+		$source = 'C:/xampp/htdocs/ievent/';
+		$output = $follower->getdirectorysize($source);
+		echo json_encode($output); 
+	}
+	
+	public function post_animals_story(){
+		
+			$animal_id = Input::get('animal_id');
+		/*	$temp 	= file_get_contents('http://www.whaleshark.org/rest/org.ecocean.Story?individualID='.$animal_id.' ');
+			$var 	= preg_replace("/[\r\n]+/", " ", $temp);
+			$var 	= utf8_encode($var);
+			$json2 	= json_decode($var, true);*/
+			
+		$url = 'http://www.wildme.org/polarbearlibrary/rest/org.ecocean.Story?individualID=='.$animal_id.' ';
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL,$url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_HEADER, 0);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0); 
+        $output = curl_exec($ch);
+        echo curl_error($ch);
+        curl_close($ch);
+        return $output;
+    			
+		return array('status' => 'success','record' => $json2);
+	}
+	
+	/**********************get user animal***************************/	 
 }
-
-
 
 ?>

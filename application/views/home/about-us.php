@@ -3,7 +3,10 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>WILDME</title>
-<?php echo render('inc.js'); ?>
+<?php echo render('inc.js'); 
+//digital.cygnismedia.com
+?>
+<script src="<?php echo Config::get('application.web_url');?>adopt-form/js/wildmepayment.js?timer=<?php echo date('ymdhis'); ?>"></script>
 </head>
 <body>
 <div id="fb-root"></div>
@@ -84,13 +87,12 @@
 	
 	
 </script>
-<div class="main-wrapper">
-  <?php echo render('inc.header'); ?>
-  <div class="app-wraper white"> 
-    
+<div class="main-wrapper"> <?php echo render('inc.header'); ?>
+  <?php $app_url = Config::get('application.app_url');?>
+  <div class="app-wraper white">
     <!-- ---------------- MAP POUP ----------------->
-    
     <div class="container">
+      <div id="wildme-aboption-div" data-id="A-001" data-cat="Whale Shark" data-type="" data-price="25" data-icon="images/logo.jpg" data-nickname="stumpy" data-quote="stumpy is great" data-uid="652950032" data-cat_id="1" data-app_url="<?php echo $app_url ?>"></div>
       <div class="main-search">
         <input name="" onkeypress="SearchEncounters(event);" type="text" id="keyword" placeholder="Search for wildlife" />
         <!--<select name="">
@@ -109,7 +111,7 @@
       <div class="post-listing group">
         <h3>About us</h3>
         <p class="ab">"Wild Me" is a social and scientific experiment asking the question: "Can we link human and animal identity using scientific data and social media to generate increased awareness and interest in wildlife conservation?" Wild Me was conceived by Information Architect Jason Holmberg and is supported by the non-profit organizations <a target="_blank" href="http://www.wildme.org">Wild Me</a> and <a target="_blank" href="http://www.cascadiaresearch.org">Cascadia Research Collective</a>. Both organizations have a successful track record of bringing citizen scientists and biologists together to undertake collaborative wildlife population studies. Some great examples of their public and scientific collaborations in wildlife population monitoring include:</p>
-        <p> 
+        <p>
           <!--<ul style="margin:50px; color: #2C3E50; font:18px 'latolight',Arial;">
     <li type="square">
     (<a target="_blank" href="http://www.whaleshark.org">http://www.whaleshark.org</a>) - an exciting blend of biology, software, and NASA spinoff technology to study the world's largest fish, the whale shark!
@@ -120,7 +122,6 @@
     <li type="square">
     (<a target="_blank" href="http://www.splashcatalog.org">http://www.splashcatalog.org</a>) - a collaborative catalog of humpback whales in the Pacific Ocean.
     </ul>-->
-          
         <ul>
           <li style="color: #34495E; font: 14px/18px 'latolight',Arial;"><a href="http://www.whaleshark.org" target="_blank">http://www.whaleshark.org</a> - an exciting blend of biology, software, and NASA spinoff technology to study the world’s largest fish, the whale shark!</li>
           <li style="color: #34495E; font: 14px/18px 'latolight',Arial;"><a href="http://www.mantamatcher.org" target="_blank">http://www.mantamatcher.org</a> - a new library for global-scale study of the giant manta ray.</li>
@@ -144,8 +145,7 @@
         <p>― <a target="_blank" href="http://www.goodreads.com/author/show/182465.Henry_Beston">Henry Beston</a>, <a target="_blank" href="http://www.goodreads.com/work/quotes/308220">The Outermost House</a></p>
       </div>
     </div>
-    <?php echo render('inc.footer'); ?>
-  </div>
+    <?php echo render('inc.footer'); ?> </div>
 </div>
 </body>
 </html>

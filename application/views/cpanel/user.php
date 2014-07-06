@@ -15,6 +15,8 @@
   <option value="id">Sort By</option>
   <option value="name_asc">Name (A-Z)</option>
   <option value="name_desc">Name (Z-A)</option>
+    <option value="badge_users">Badged Users</option>
+  
   </select>
   </div>
  
@@ -30,6 +32,8 @@
           <td class="width"  style=" font-size: 14px;">Email</td>
           <td class="width"  style=" font-size: 14px;">Gender</td>
           <td class="width"  style=" font-size: 14px;">Date Joined</td>
+          <td class="width"  style=" font-size: 14px;">Action</td>
+          
         </tr>
         <tbody id="user_rows">
         </tbody>

@@ -195,6 +195,14 @@ class Login  {
 			//if(!is_array($udata['record'])) $udata['record'] = get_object_vars($udata['record']);
 	
 			$userExist 	= $udata['record'];
+
+			$is_ban  = $userExist['is_ban'];
+
+			if($is_ban == 'Yes')
+			{
+				$status = 'error2';
+			}
+
 			$user_id	= $userExist['id'];
 			$name		= $userExist['name'];
 			
@@ -217,7 +225,7 @@ class Login  {
 			$_SESSION['s_name'] =$userExist['name'];
 		}
 		
-		return array('user_id'=>$user_id,'name'=> $name, 'status'=>$status);
+		return array('user_id'=>$user_id,'name'=> $name,'status'=>$status);
 	}
 
 	
@@ -234,7 +242,9 @@ class Login  {
 		$gender			=	$param['gender'];
 		$date_added		=	date("Y-m-d h:i:s");
 		$check_user		=	DB::table('user')->where('email','=',$email)->count();
+
 		
+
 		if ($check_user == 0)
 		{
 			$id    		= 	DB::table('user')->insert_get_id(array( 'name' 			=> $name,
@@ -263,6 +273,7 @@ class Login  {
 			}
 			else
 			{
+				
 				$url   = "https://graph.facebook.com/me/friends?access_token=".$access_token;
 				//Get data from facebook
 				 try{
@@ -322,13 +333,23 @@ class Login  {
 		}
 		else
 		{
-		  $this->userSignin($facebook_id);
-		  $status =  'success';
+
+			$is_ban	=DB::table('user')->where('email','=',$email)->first();
+			$is_ban1	= json_decode(json_encode($is_ban), TRUE);
+			$ban_status = $is_ban1['is_ban'];
+			if($ban_status == 'Yes')
+			{
+				$status = "error2";
+			}
+			else
+			{
+				$this->userSignin($facebook_id);
+		  		$status =  'success';
+			}
+			
+		  
 		}
 		
-		 
-	
-	
 		return array('status' => $status , 'name'=> $name, 'id'=> $facebook_id);
 	}
 

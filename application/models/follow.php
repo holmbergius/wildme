@@ -1,17 +1,73 @@
 <?php
 
 class Follow{
+public $gfile = 0;
 
+public function getdirectorysize($path)
+	{
+  //using the opendir function
+    $dir_handle = @opendir($path) or die("Unable to open $path");
+   
+    //Leave only the lastest folder name
+   
+   
+    $dirname = basename($path);
+  
+    //display the target folder.
+    //echo ("<li>$dirname\n");
+    //echo "<ul>\n";
+	
+    while (false !== ($file = readdir($dir_handle)))
+    {
+        if($file!="." && $file!="..")
+        {
+            if (is_dir($path."/".$file))
+            {
+                //Display a list of sub folders.
+			   $this->getdirectorysize($path."/".$file);
+			   $this->gfile++;
+            }
+            else
+            {
+                //Display a list of files.
+               // echo "<li>$file</li>";
+			   
+            }
+        }
+    }
+    //echo "</ul>\n";
+   // echo "</li>\n";
+   
+    //closing the directory
+    closedir($dir_handle);
+	return $this->gfile;
+	}
+	
 	public function create_follow($param)
 	{
+		
 		$status = 'error';
+		
+		if($param['user_type'] == 'website'){
+			
+			$count_animal = DB::first("SELECT COUNT(id) as total,id from `animal` where label = '".$param['animal_id']."'");
+		
+			if($count_animal->total > 0){
+				$param['animal_id'] = $count_animal->id;
+			}else{
+				return array('status'=>$status);
+			}
+		
+		}
+	
 		$count = DB::table('follow')->where('user_id','=',$param['user_id'])->where('animal_id','=',$param['animal_id'])->count('id');
+		
 		if($count == 0)
 		{
 			$id = DB::table('follow')->insert_get_id(array('user_id' 	   => $param['user_id'],
 														   'animal_id'     => $param['animal_id']
 																	));
-																	
+																
 			if($id > 0 )
 			{
 				$key = 'follow_'.$id;
@@ -28,6 +84,12 @@ class Follow{
 				
 				$log = new UserLog;
 				$record = $log->create_user_log($param1);
+				
+				$param2['uid'] 	  		= $param['user_id'];
+				$param2['animal_id']    = $param['animal_id'];  
+				   
+				$user_setting = new UserSetting;
+				$record = $user_setting->add_setting($param2);
 								
 				Cache::forever($key,$data);
 				$status = 'success';
@@ -86,6 +148,7 @@ class Follow{
 		return array('status' => $status, 'msg' => $msg);
 	}
 	
+	
 	//get all followers against animal_id
 	public function get_followers($param)
 	{
@@ -141,8 +204,10 @@ class Follow{
 				$out_ani = json_decode(json_encode($out_ani), TRUE);
 				$data[$ind]['id'] 		= $value->animal_id;
 				$data[$ind]['nick_name'] 	= $out_ani['record']['nick_name'];
+				$data[$ind]['label'] 	= $out_ani['record']['label'];
 				$data[$ind]['sex'] 			= $out_ani['record']['sex'];
 				$data[$ind]['follow_count'] = $out_ani['record']['follow_count'];
+				$data[$ind]['label'] = $out_ani['record']['label'];
 				$ani 	 = new Category;
 				$out_cat = $ani->get_category($out_ani['record']['category_id']);
 				$out_cat = json_decode(json_encode($out_cat), TRUE);
@@ -165,6 +230,34 @@ class Follow{
 		return array('records'=>$data, 'totalrecords'=>$count->total,  'status'=>$status);
 	}
 	
+	//get all global followers against animal_id
+	public function get_global_follows($param)
+	{
+		$data ='';
+		$status = 'error';	
+		$count_animal = DB::first("SELECT COUNT(id) as total,id, category_id from `animal` where label = '".$param['animal_id']."'");
+		
+		if($count_animal->total > 0)
+		{
+			$param['animal_id'] = $count_animal->id;
+			
+			$count_total = DB::first("SELECT COUNT(id) as total from `follow` where animal_id = '".$param['animal_id']."'");
+			if($count_total->total > 0)
+			{
+				
+				$cat_data = DB::query("SELECT * from `category` WHERE title = '". $count_animal->category_id."'");
+				
+				$cat_data		= json_encode($cat_data);
+				$cat_data		= json_decode($cat_data, TRUE);
+				
+				$data = $cat_data;
+				
+				$status = 'success';	
+			}
+	
+	}
+		return array('category_data'=>$data, 'totalfollows'=>$count_total->total,  'status'=>$status);
+	}
 
 }
 

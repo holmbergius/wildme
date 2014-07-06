@@ -45,6 +45,14 @@ class User {
 			$sqlpart .=" AND ( `id` = '".$param['id']."'   ) ";
 		}
 		
+		if($sortby == 'badge_users'){
+			
+			$sortby = 'id';
+  		    $orderby = 'DESC';
+			$sqlpart .=" AND ( `adoptor_badge` = 'Yes'   ) ";
+			
+		}
+		
 		$query = "select COUNT(id) as total from user WHERE 1=1 $sqlpart";
 		$count = DB::first($query);
 	
@@ -82,6 +90,8 @@ class User {
 		$final_total = 0;
 		$user_detail= array();
 		$count		= DB::first("select count(id) as total from user where id = ".$user_id." ");	
+		
+		$final_limit = $limit + $offset;
 		if($count->total >0)
 		{
 			$userData	= $this->get_user($user_id);			
@@ -102,20 +112,22 @@ class User {
 					$final_total = $final_total + $count_sql->total;
 					if($count_sql->total > 0 )
 					{
-						if($offset <= $i && $i<=$limit)
-						{
-							$userData	= $this->get_user($break_id[$ind]);			
-							$temp 	  	= json_encode($userData);
-							$userData 	= json_decode($temp, true);
+						
+							if($offset <= $i && $i<=$final_limit)
+							{
+								$userData	= $this->get_user($break_id[$ind]);			
+								$temp 	  	= json_encode($userData);
+								$userData 	= json_decode($temp, true);
+								
+								$count = DB::first("SELECT COUNT(id) as total from `follow` where `user_id` = '".$break_id[$ind]."'   ");
+								
+								$userData['record']['following'] = $count->total;
+								
+								$user_detail[] = $userData['record'];
 							
-							$count = DB::first("SELECT COUNT(id) as total from `follow` where `user_id` = '".$break_id[$ind]."' limit $offset,$limit  ");
-							
-							$userData['record']['following'] = $count->total;
-							
-							$user_detail[] = $userData['record'];
+								$status = 'success';
+							}
 							$i++;
-							$status = 'success';
-						}
 					}
 				}
 			}
@@ -123,6 +135,54 @@ class User {
 		return array('records' => $user_detail, 'totalrecords' => $final_total,'status' => $status);
 	}
 
+	// adoptor badge update
+	public function update_adoptor_badge($param)
+	{
+		$id = $param['id'];
+		$adoptor_badge = $param['adoptor_badge'];
+		
+		$count		= DB::first("select count(id) as total from user where id = ".$id." ");	
+		if($count->total >0)
+		{
+		$sql   = "UPDATE `user` set `adoptor_badge` = '$adoptor_badge' WHERE id = '".$id."'";	
+		$user = DB::query($sql);
+		$key  = 'wildme_user_'.$id;
+		Cache::forget($key);
+		
+		$status = 'success';
+		return array('status'=>$status);
+		}else
+		{
+			$status = 'error';
+			$msg = 'No record found for this id';
+			return array('status'=>$status , 'msg'=>$msg);
+		} 
+	}
+
+	public function update_ban_user($param)
+	{
+		$id = $param['id'];
+		$ban_status = $param['ban_status'];
+
+		$count		= DB::first("select count(id) as total from user where id = ".$id." ");	
+		if($count->total >0)
+		{
+			$sql   = "UPDATE `user` set `is_ban` = '$ban_status' WHERE id = '".$id."'";
+		
+		$user = DB::query($sql);
+		$key  = 'wildme_user_'.$id;
+		Cache::forget($key);
+		
+		$status = 'success';
+		return array('status'=>$status);
+		}else
+		{
+			$status = 'error';
+			$msg = 'No record found for this id';
+			return array('status'=>$status , 'msg'=>$msg);
+		} 
+	}
+	
 	
 }
 ?>

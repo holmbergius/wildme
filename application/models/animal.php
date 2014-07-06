@@ -1,7 +1,5 @@
 <?php  
 class Animal {
-	
-
 
 	//Get Single Record
 	public function get_animal($id)
@@ -20,6 +18,14 @@ class Animal {
 			}
 			else
 			{
+				/*$count = DB::table('animal_original')->where('id','=',$id)->count();
+				if($count > 0)
+				{
+					$data 	= DB::table('animal_original')->where('id','=',$id)->first();
+	
+					//Cache::forever($key,$data);
+				}
+				else*/ 
 				return false;	
 			}			
 		}
@@ -61,7 +67,7 @@ class Animal {
 		
 
 		if($id != NULL && $id != "") 	$sqlChunk[] = " id  = '".$id."' ";
-		if($keyword != "")  			$sqlChunk[] = " (nick_name like '%".$keyword."%' OR id like '%".$keyword."%' )";
+		if($keyword != "")  			$sqlChunk[] = " (nick_name like '%".$keyword."%' OR id like '%".$keyword."%' OR animal_id like '%".$keyword."%' OR label like '%".$keyword."%' )";
 		if($category_id != "")  		$sqlChunk[] = " category_id =".$category_id."";
 	
 		if(count($sqlChunk) > 0 ){
@@ -92,19 +98,7 @@ class Animal {
 
 				if($encounter_count > 0){
 
-					// this code block will return all encounter of this animal
-
-					/*$encounter  =  new Encounter;
-					$temp   = array();
-					$temp['offset']   = 0;
-					$temp['limit']    = $data[$ind]['encounter_count'];
-					$temp['sortby']   = " id ";
-					$temp['orderby']  = " desc ";
-					$temp['animal_id']     = $value->id;
-
-
-					$data1 = $encounter->get_encounters($temp);
-					$encounter_details	  = $data1['records'];*/
+			
 				}
 				$data[$ind]['encounter_count']   = $encounter_count;
 				// $data[$ind]['encounter_details'] = $encounter_details;
@@ -113,12 +107,14 @@ class Animal {
 				$data3 			= $Category->get_category($data[$ind]['category_id']);
 				$data3			= json_decode(json_encode($data3), TRUE);
 				$cat_details	= $data3['record'];
-				
+				//print_r($cat_details);die;
 				$data[$ind]['category_title'] 	= $cat_details['title'];
 				$data[$ind]['category_color'] 	= $cat_details['color_code'];
 				$data[$ind]['category_type'] 	= $cat_details['type'];
 				$data[$ind]['category_icon'] 	= $cat_details['icon'];
 				$data[$ind]['api_url'] 			= $cat_details['api_url'];
+				$data[$ind]['category_active_gps'] =  $cat_details['active_gps'];
+				$data[$ind]['category_active_adoption'] =  $cat_details['active_adoption'];
 				
 				
 				$friend_count 	= DB::table('animal_friend')->where('animal_id','=',$value->id)->count();
@@ -127,18 +123,7 @@ class Animal {
 				
 				if($friend_count > 0){
 					
-					// this code block will return all friends of this animal
-					/*$friend  =  new AnimalFriend;
-					$temp   = array();
-					$temp['offset']   = 0;
-					$temp['limit']    = $friend_count;
-					$temp['sortby']   = " id ";
-					$temp['orderby']  = " asc ";
-					$temp['animal_id']= $value->id;
-
-
-					$data1 = $friend->get_friends($temp);
-					$friend_details	  = $data1['records'];*/
+				
 				}
 				$data[$ind]['friend_count']   = $friend_count;
 				// $data[$ind]['friend_details'] = $friend_details;
@@ -153,6 +138,24 @@ class Animal {
 						$data[$ind]['follow_check']   = 1;
 					}
 				}
+				
+				$adoptorDetail 	= DB::query('SELECT `uid` FROM `adoptor` WHERE `animal_id` = "'.$value->id.'" ');
+			
+				$user_names = array();
+				//print_r($adoptorDetail);	die;
+				
+				foreach($adoptorDetail as $inds => $val)
+				{
+					if($val->uid > 0){
+					$userDetail 	= DB::table('user')->where('id','=',$val->uid)->first();
+					$user_names[]  = $userDetail->name;	
+					}
+				}
+				
+				
+				$data[$ind]['user_data'] 	= implode(",",$user_names);
+				
+				
 			}
 		}
 		else
@@ -199,7 +202,106 @@ class Animal {
 		return array('status' =>'success');
 	}
 
+// adoption status change
+	public function adoption_status_change($param)
+	{
+		$id = $param['id'];
+		$key	= 'animal_'.$id;
+		$status = $param['status'];
+		
+		$count		= DB::first("select count(id) as total from animal where id = '".$id."' ");	
+		if($count->total >0)
+		{
+		$sql   = "UPDATE `animal` set `active_adoption` = '$status' WHERE id = '".$id."'";	
+		$user = DB::query($sql);
+			Cache::forget($key);
+		$status = 'success';
+		return array('status'=>$status);
+		}else
+		{
+			$status = 'error';
+			$msg = 'No record found for this id';
+			return array('status'=>$status , 'msg'=>$msg);
+		} 
+	}
+	
+	// gps status change
+	public function gps_status_change($param)
+	{
+		$id = $param['id'];
+		$key	= 'animal_'.$id;
+		$status = $param['status'];
+		
+		$count		= DB::first("select count(id) as total from animal where id = '".$id."' ");	
+		if($count->total >0)
+		{
+		$sql   = "UPDATE `animal` set `active_gps` = '$status' WHERE id = '".$id."' ";	
+	
+		$user = DB::query($sql);
+		Cache::forget($key);
+		$status = 'success';
+		return array('status'=>$status);
+		}else
+		{
+			$status = 'error';
+			$msg = 'No record found for this id';
+			return array('status'=>$status , 'msg'=>$msg);
+		} 
+	}
 
+	public function get_animal_details($param)
+	{
+		$animal_id = $param['animal_id'];
+
+		$count  = DB::first("select COUNT(id) as `total`, `id` from animal where `label` = '$animal_id'");
+
+		if($count->total >0)
+		{
+			$animal_id = $count->id;
+			$animalData = $this->get_animal($animal_id);
+			$animalData	= json_decode(json_encode($animalData), TRUE);
+			$nick_name = $animalData['record']['nick_name'];
+			$quote = $animalData['record']['quote'];
+
+			if($nick_name == '' || $nick_name == null)
+			{
+				$nick_name = 0;
+			}
+			if($quote == '' || $quote == null)
+			{
+				$quote = 0;
+			}
+
+			$category_id = $animalData['record']['category_id'];
+			$category  		= new Category;
+			$categoryData	= $category->get_category($category_id);
+			$categoryData	= json_decode(json_encode($categoryData), TRUE);
+			$icon = $categoryData['record']['icon'];
+			$type = $categoryData['record']['type']; 
+			$price = $categoryData['record']['minimum_amount'];
+			$data1['record']['wildme_icon'] = $icon;
+			$data1['record']['wildme_animal_type']  = $type;
+			$data1['record']['wildme_animal_price'] = $price;
+			$data1['record']['wildme_animal_nick'] = $nick_name;
+			$data1['record']['wildme_animal_quote'] = $quote;
+			$data1['record']['wildme_category_id']   = $category_id;
+			$data1['record']['wildme_category_name'] =  $categoryData['record']['title'];
+			$data1['record']['wildme_animal_id'] 	 =  $animal_id;
+			$data1['record']['wildme_animal_label']  = $animalData['record']['label'];
+			$data1['record']['first_adoptor']  = $animalData['record']['first_adoptor'];
+			
+			$data[] = $data1['record'];
+			$status = 'success';
+		}
+		else
+		{
+			$data[] =	'';
+			$status = 'error';	
+		}
+
+		return array('records' => $data, 'totalrecords' => $count->total,'status' => $status);	
+
+	}
 
 }
 ?>

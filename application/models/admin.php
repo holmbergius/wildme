@@ -14,6 +14,8 @@ class Admin {
 		
 	 	   if($adminData)
 		   {	
+		   	
+		   		
 		  	   @session_start();
 			   Session::put('s_admin_id', $adminData->admin_id);
 			   $s_admin_id = Session::get('s_admin_id');

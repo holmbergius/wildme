@@ -61,7 +61,7 @@
 					//getPopularActive('follow_count',3);
 					getUserFollowes('id',0,5,0);
 					getUserLog(0);
-					
+					getUser();					
 					$('#fb_user_name').text(user_name);
 					$('#fb-user-pic').attr('src',"http://graph.facebook.com/"+uid+"/picture?width=33&height=33");
 					$('#user-page').attr('href',"<?php echo Config::get('application.web_url');?>user-page?id="+uid+"");
@@ -128,7 +128,11 @@ $coverPhoto	=	 (isset($coverPhotoDetail->cover))?$coverPhotoDetail->cover->sourc
         </div>
         <a onclick="SearchEncounters(event);" href="javascript:SearchEncounters(event);" class="btns noSelect serach-btn"><i class="icon-search"></i></a> </div>
       <div class="profile-banner" style=" background:url(<?php echo (!empty($coverPhoto))?$coverPhoto:"images/dummy.jpg";?>) center center no-repeat; width:770px; height:265px; background-size:100%">
+      <input type="hidden" id="uid" value="<?php echo $_REQUEST['id']; ?>" />
+      <div class="batch-profile" id="badge" style="display:none;"><img src="images/batch.png" width="116" height="116" /></div>
         <div class="wild-profile-banner" >
+        
+         
         <div class="wild-profile">
           <div class="pic">
             <div class="align-div-banner"><img src="http://graph.facebook.com/<?php echo (isset($_REQUEST['id']))?$_REQUEST['id']:"";  ?>/picture?width=61&height=61"/></div>

@@ -1,0 +1,155 @@
+/* http://meyerweb.com/eric/tools/css/reset/ 
+   v2.0 | 20110126
+   License: none (public domain)
+*/
+
+/*html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, abbr, acronym, address, big, cite, code, del, dfn, em, img, ins, kbd, q, s, samp, small, strike, strong, sub, sup, tt, var, b, u, i, center, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td, article, aside, canvas, details, embed, figure, figcaption, footer, header, hgroup, menu, nav, output, ruby, section, summary, time, mark, audio, video {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	font-size: 100%;
+	font: inherit;
+	text-decoration: none;
+}*/
+/* HTML5 display-role reset for older browsers */
+article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, section {
+	display: block;
+}
+html, body {
+	min-height:100%;
+}
+body {
+	line-height: 1; background:#ecf0f1; padding-top:45px;
+}
+ol, ul {
+	list-style: none;
+}
+blockquote, q {
+	quotes: none;
+}
+blockquote:before, blockquote:after, q:before, q:after {
+	content: '';
+	content: none;
+}
+table {
+	border-collapse: collapse;
+	border-spacing: 0;
+}
+a {
+	color:inherit;
+}
+
+
+
+@font-face {
+	font-family: 'latobold';
+	src: url('font/lato-bold-webfont.eot');
+	src: url('font/lato-bold-webfont.eot?#iefix') format('embedded-opentype'), url('font/lato-bold-webfont.woff') format('woff'), url('font/lato-bold-webfont.ttf') format('truetype'), url('font/lato-bold-webfont.svg#latobold') format('svg');
+	font-weight: normal;
+	font-style: normal;
+}
+
+/*----=================wild-me-button=================----*/
+
+.list-comment-follow2{
+	background: none repeat scroll 0 0 #F06B2A;
+	float: left;
+	overflow: hidden;
+	padding: 1px;
+	position: relative;
+	margin-right: 15px;
+}
+
+.list-comment-counts-follow2{
+	background: none repeat scroll 0 0 #FFFFFF;
+	cursor: pointer;
+	float: left;
+	padding: 3px 7px;
+	font: 15px 'latobold', Arial;
+	color: #f06b2a;
+	min-width: 118px;
+	padding: 4px 7px 0px 7px;
+	margin-right: 1px;
+	padding-right: 0px;
+	height: 20px;
+}
+
+.list-comment-counts-follow2:hover{
+	background:#F06B2A;
+	color:#FFF;
+	}
+
+.list-comment-count-bg-follow2{
+	background: none repeat scroll 0 0 #F06B2A;
+	color: #FFFFFF;
+	cursor: pointer;
+	float: left;
+	font: 15px 'latobold', Arial;
+	min-width: 20px;
+	padding: 3px 5px;
+	text-align: center;
+}
+
+.list-comment-count-bg-follow2.custom1{
+	background:#FFFFFF;
+	color:#666666;
+height: 18px;	
+	}
+
+
+.list-comment-counts-follow2 span.custom4{
+	float:right;
+	width:21px;
+	height:20px;
+	background:url(//fb.wildme.org/wildme/public/followers/images/orange-bear-icon.png) no-repeat;
+	background-size:21px 20px;
+	font-size:0px;
+	margin-right:0px;
+	}
+
+.list-comment-counts-follow2 span.custom5{
+	float:left;
+	width:15px;
+	height:16px;
+	background:url(//fb.wildme.org/wildme/public/followers/images/men-icon.png) no-repeat;
+	background-size:15px 16px;
+	font-size:0px;
+	margin-right:2px;
+	}
+	
+
+.list-comment-follow2.custom1:hover .list-comment-counts-follow2 span.custom4{
+	background:url(//fb.wildme.org/wildme/public/followers/images/white-bear-icon.png) no-repeat;
+	background-size:21px 20px;
+	}	
+
+.list-comment-follow2.custom1:hover .list-comment-counts-follow2 span.custom5{
+	background:url(//fb.wildme.org/wildme/public/followers/images/men-icon-white.png) no-repeat;
+	background-size:15px 16px;
+	}		
+
+
+
+@media all and (-webkit-min-device-pixel-ratio: 1.5) {
+	
+	.list-comment-counts-follow2 span.custom4{
+	background:url(//fb.wildme.org/wildme/public/followers/images/orange-bear-icon@2x.png) no-repeat;
+	background-size:21px 20px;
+	}
+
+.list-comment-follow2.custom1:hover .list-comment-counts-follow2 span.custom4{
+	background:url(//fb.wildme.org/wildme/public/followers/images/white-bear-icon@2x.png) no-repeat;
+	background-size:21px 20px;
+	}	
+
+.list-comment-counts-follow2 span.custom5{
+	background:url(//fb.wildme.org/wildme/public/followers/images/men-icon@2x.png) no-repeat;
+	background-size:15px 16px;
+	}
+
+.list-comment-follow2.custom1:hover .list-comment-counts-follow2 span.custom5{
+	background:url(//fb.wildme.org/wildme/public/followers/images/men-icon-white@2x.png) no-repeat;
+	background-size:15px 16px;
+	}		
+	
+	}

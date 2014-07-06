@@ -1,0 +1,33 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+
+<script src="../js/jquery.js"></script>
+</head>
+
+<body>
+     <div class="list-comment-follow2 custom1"  data-id="A-001"></div>
+     
+     <script>
+     
+$(document).ready(function() {
+	
+	$('.list-comment-follow2').each(function(ind, val) {
+		
+		var animal_id 	=   $(this).data('id');
+		$.get("http://fb.wildme.org/wildme/public/api/global_follows",{animal_id:animal_id},function(data){
+		
+			if(data.status == 'success')
+			{
+				var htmls = '<link rel="stylesheet" href="http://fb.wildme.org/wildme/public/followers/css/style.css?timer=4" type="text/css"><div class="list-comment-counts-follow2 custom2"><span class="custom5"></span> WILD ME <span class="custom4"></span></div><div class="list-comment-count-bg-follow2 custom1">'+data.totalfollows+'</div>';
+				
+				$(val).html(htmls);
+			}
+		}, "json" );
+	});
+		
+});
+
+     </script>
+</body>
+</html>
