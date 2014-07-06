@@ -1,4 +1,4 @@
-<link rel="icon" type="image/gif" href="<?php echo Config::get('application.doc_path');?>images/logo-16.gif" />
+<link rel="icon" type="image/gif" href="<?php echo Config::get('application.web_url');?>images/logo-16.gif" />
 <link rel="stylesheet" href="<?php echo Config::get('application.web_url');?>css/style.css?timer=4" type="text/css">
 <link rel="stylesheet" type="text/css" href="<?php echo Config::get('application.web_url');?>css/font-awesome.css"/>
  <link href="<?php echo Config::get('application.web_url');?>bootstrap/css/bootstrap.css" rel="stylesheet">
