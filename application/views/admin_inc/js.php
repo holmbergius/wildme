@@ -1,4 +1,4 @@
-<title>Wild Me - Admin Panel</title>
+<title>Wild Me :: Admin Panel</title>
 <link rel="stylesheet" type="text/css" href="../admin/css/style.css?timer=2"/>
 <link rel="stylesheet" type="text/css" href="../admin/css/jquery-ui1.css"/>
 <link rel="stylesheet" type="text/css" href="../admin/css/jquery.ui.css"/>
